@@ -1,3 +1,5 @@
+# .gitignore
+
 # Ignore all contents of audio/ and photos/
 Audio/*
 Photos/*
