@@ -1,0 +1,7 @@
+# Ignore all contents of audio/ and photos/
+Audio/*
+Photos/*
+
+# But don't ignore the folders themselves
+!Audio/
+!Photos/

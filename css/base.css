@@ -1,0 +1,167 @@
+/* Reset and base layout */
+body {
+  margin: 0;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  background-color: var(--color-body-bg);
+  height: 100dvh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Popup Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  background: var(--color-modal-overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* above everything */
+}
+
+/* Popup Content */
+.modal-content {
+  background: var(--color-modal-content-bg);
+  padding: 2rem;
+  border-radius: 15px;
+  max-height: 80dvh;
+  max-width: 320px;
+  width: 90vw;
+  box-shadow: 0 4px 20px var(--color-shadow-medium);
+  text-align: center;
+}
+
+.modal-image {
+  max-width: 60%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.riddle-text {
+  font-size: 1.5rem; /* Adjust as needed — 1.5rem is a good readable size */
+}
+
+#riddle-answer {
+  width: 90%;
+  max-width: 300px;
+  padding: 0.6rem 0.8rem;
+  margin: 1rem auto 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-default);
+  font-size: 1rem;
+  display: block;
+}
+
+#submit-answer {
+  background-color: var(--color-btn-bg);
+  border: none;
+  color: var(--color-btn-text);
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#submit-answer:hover {
+  background-color: var(--color-btn-bg-hover);
+}
+
+.feedback-text {
+  color: var(--color-feedback-error);
+  margin-top: 0.5rem;
+  min-height: 1.2rem; /* reserve space for error message */
+  font-weight: bold;
+}
+
+/* Card wrapper holds the 3D perspective */
+#card-wrapper {
+  perspective: 1000px;
+  width: 90vw;
+  max-width: 400px;
+  height: 80dvh;
+  max-height: 600px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The card itself flips */
+#card {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+  position: relative;
+  cursor: grab;
+}
+
+#card.open {
+  transform: rotateY(-180deg);
+}
+
+/* Card face styling */
+.card-face {
+  background-color: var(--color-card-face-bg);
+  border-radius: 20px;
+
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  box-shadow: 0 4px 15px var(--color-shadow-light);
+  position: absolute;
+  top: 0;
+  left: 0;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.front {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.fireplace-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.fireplace-video {
+  width: 95%;               /* Almost the full width of the card */
+  max-width: 500px;         /* Optional: prevent it from getting too huge on wide screens */
+  display: block;           /* Ensure it's treated like a block element */
+  margin: 20px auto;        /* Center it horizontally and add spacing */
+  border-radius: 16px;      /* Smooth, rounded corners */
+  box-shadow: 0 4px 12px var(--color-shadow-medium);
+}
+
+#card-front p {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.inside {
+  transform: rotateY(-180deg);
+  background-color: var(--color-card-inside-bg);
+}
+
+#gallery img {
+  width: 90%;
+  margin: 10px auto;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px var(--color-shadow-soft);
+}

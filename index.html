@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Happy Birthday!</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
-  <script defer src="decryption.js"></script>
-  <script defer src="spawnObjects.js"></script>
-  <script defer src="script.js"></script>
+  <title>Happy Christmas!</title>
+
+  <link rel="stylesheet" href="css/theme-christmas.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/controls.css" />
+
+  <script defer src="js/decryption.js"></script>
+  <script defer src="js/spawnObjects.js"></script>
+  <script src="js/audioPlayer.js" defer></script>
+  <script defer src="js/main.js"></script>
 </head>
 <body>
+  <!-- Popup Modal -->
   <div id="popup-modal" class="modal-overlay">
     <div class="modal-content">
       <h2>Prove who you are by answering this riddle:</h2>
@@ -22,23 +26,38 @@
       <p id="feedback" class="feedback-text"></p>
     </div>
   </div>
+
+    <!-- Audio controls top-left -->
+  <div id="audio-controls-container">
+    <button id="next-song-btn" type="button">Next</button>
+    <select id="song-select" title="Choose a song"></select>
+  </div>
+
+  <audio id="bg-music" hidden></audio>
+
+  <!-- Snow speed slider -->
   <div id="snowSliderContainer" style="display: none;">
     <label for="snowSlider" id="snowSliderLabel">❄️ Speed</label>
     <input type="range" id="snowSlider" min="0" max="100"/>
   </div>
+
+  <!-- Card -->
   <div id="card-wrapper">
     <div id="card" class="step-0">
       <div id="card-front" class="card-face front">
-        <div class="birthday-header">
-          <h1>Happy Birthday!</h1>
+        <div class="fireplace-header">
+          <h1>Merry Christmas!</h1>
         </div>
+
+        <video
+          class="fireplace-video" autoplay muted loop playsinline>
+          <source src="Fireplace.mp4" type="video/mp4" />
+        </video>
+
         <p>Swipe to open the card</p>
       </div>
       <div id="card-inside" class="card-face inside">
-        <audio id="bg-music" loop>
-          <source src="Audio/Happy.mp3" type="audio/mpeg" />
-        </audio>
-        <h1>Happy!!!</h1>
+        <h1>Happy Holidays!!!</h1>
         <p>Open and close the card again to keep celebrating!!!</p>
       </div>
     </div>
