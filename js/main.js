@@ -9,6 +9,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const submitBtn = document.getElementById("submit-answer");
   const answerInput = document.getElementById("riddle-answer");
   const feedback = document.getElementById("feedback");
+  // Create the first and only instance
+  const player = AudioPlayer.getInstance(
+    "#bg-music",
+    "#next-song-btn",
+    "#song-select",
+    "Audio/Music/songs.json",
+    "Audio/Music",
+    ["Mele Kalikimaka.mp3", "Mr Grinch.mp3", "Rudolph.mp3", "Scrooge.mp3"]  // these songs will always be last
+  );
 
   // Hide main card initially
   cardWrapper.style.display = "none";
@@ -17,19 +26,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Focus input automatically
   answerInput.focus();
-  function openCard(){
+  function showCard(){
         // Correct - hide popup, show card
     popupModal.style.display = "none";
 
     cardWrapper.style.display = "flex";
-    //bgMusic.play();
+    bgMusic.play();
 
     document.getElementById("snowSliderContainer").style.display = "block";
     document.getElementById("snowSlider").value = getSliderValueFromInterval(getSnowInterval());
     startSnowTimers();
+    createPresents();
     correct = true;
   }
-  openCard();
+   const container = document.getElementById("presents-container");
+  if (!container) {
+    console.error("Missing container!");
+    return;
+  }
+
+  showCard(); //skip riddle
   submitBtn.addEventListener("click", async () => {
     const userAnswer = answerInput.value.trim().toLowerCase();
 
@@ -39,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (userAnswerHash === correctAnswerHash) {
       riddleKey = await deriveDecryptionKey(userAnswer);
 
-      openCard();
+      showCard();
     } else {
       // Incorrect
       wrongAttempts++;
@@ -118,16 +134,4 @@ document.getElementById("snowSlider").addEventListener("input", function () {
   const sliderValue = parseInt(this.value);
   setSnowInterval(getIntervalFromSliderValue(sliderValue));
   startSnowTimers();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  // Create the first and only instance
-  const player = AudioPlayer.getInstance(
-    "#bg-music",
-    "#next-song-btn",
-    "#song-select",
-    "Audio/Music/songs.json",
-    "Audio/Music",
-    ["Mele Kalikimaka.mp3", "Mr Grinch.mp3", "Rudolph.mp3", "Scrooge.mp3"]  // these songs will always be last
-  );
 });

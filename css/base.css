@@ -140,7 +140,7 @@ body {
 }
 
 .fireplace-video {
-  width: 95%;               /* Almost the full width of the card */
+  width: 90%;               /* Almost the full width of the card */
   max-width: 500px;         /* Optional: prevent it from getting too huge on wide screens */
   display: block;           /* Ensure it's treated like a block element */
   margin: 20px auto;        /* Center it horizontally and add spacing */
@@ -157,6 +157,58 @@ body {
 .inside {
   transform: rotateY(-180deg);
   background-color: var(--color-card-inside-bg);
+
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Style the inside of the card */
+#card-inside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  color: var(--color-text-default); /* use your theme text color */
+  overflow: hidden; /* prevent scrollbars */
+}
+
+/* Style for the message text */
+#card-inside > h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+  text-align: center;
+  user-select: none;
+}
+
+/* Presents container fills most of the card */
+#presents-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#tree {
+  position: absolute;
+  top: -10%;       /* adjust this to control vertical placement */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 25rem;  /* or % or vw, depending on layout */
+  max-width: 90%;
+  pointer-events: none; /* So clicks go to presents behind it */
 }
 
 #gallery img {

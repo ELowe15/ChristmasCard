@@ -6,9 +6,12 @@
   <title>Happy Christmas!</title>
 
   <link rel="stylesheet" href="css/theme-christmas.css" />
+  <link rel="stylesheet" href="css/presents.css" />
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/controls.css" />
 
+  <script defer src="js/gallery.js"></script>
+  <script defer src="js/present.js"></script>
   <script defer src="js/decryption.js"></script>
   <script defer src="js/spawnObjects.js"></script>
   <script src="js/audioPlayer.js" defer></script>
@@ -58,7 +61,9 @@
       </div>
       <div id="card-inside" class="card-face inside">
         <h1>Happy Holidays!!!</h1>
-        <p>Open and close the card again to keep celebrating!!!</p>
+        <div id="presents-container">
+            <img id="tree" src="Tree.png" alt="Christmas Tree">
+        </div>
       </div>
     </div>
   </div>

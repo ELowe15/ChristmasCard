@@ -1,6 +1,6 @@
 :root {
   /* Backgrounds */
-  --color-body-bg: linear-gradient(135deg, #fffaf0 0%, #f0e5d8 100%); /* warm creamy gradient */
+  --color-body-bg: #d2b48c;
   --color-card-face-bg: #b33a3a;        /* warm cranberry red for card front */
   --color-card-inside-bg: #fbe9ec;      /* very light pinkish cream inside card */
   --color-modal-overlay-bg: rgba(0, 0, 0, 0.4);  /* softer overlay so less dark */
@@ -48,7 +48,7 @@
   --color-card-shadow: rgba(0, 0, 0, 0.15);
 
   /* Card inside background */
-  --color-card-inside-bg: #fbe9ec;
+  --color-card-inside-bg: #e8dccc;
 
   /* Modal shadow */
   --color-modal-shadow: rgba(0, 0, 0, 0.15);
