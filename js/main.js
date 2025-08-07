@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  showCard(); //skip riddle
+  //showCard(); //skip riddle
   submitBtn.addEventListener("click", async () => {
     const userAnswer = answerInput.value.trim().toLowerCase();
 
