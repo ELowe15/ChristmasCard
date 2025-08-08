@@ -3,7 +3,7 @@ class Present {
     folder,
     locked = false,
     triggerSong = '',
-    style = 'style-1',
+    style = 'classic-red',
     width = null,
     height = null,
     hasLid = false,
@@ -94,45 +94,57 @@ function createPresents() {
   const presents = [
     new Present({
       x: '20%', y: '70%',
-      folder: 'gallery1', style: 'style-1', width: '6rem', height: '6rem',
+      folder: 'Bass', style: 'classic-red', width: '6rem', height: '6rem',
       hasLid: true, hasRibbon: true, colorVariant: 'red', ribbonStyle: 'classic', triggerSong: 'song1.mp3'
     }),
     new Present({
       x: '35%', y: '68%',
-      folder: 'gallery2', style: 'style-16', width: '5rem', height: '5rem',
-      hasRibbon: true, colorVariant: 'blue', ribbonStyle: 'classic', locked: true
+      folder: 'Charlie', style: 'playful-green-stripes', width: '5rem', height: '5rem',
+      hasRibbon: true, colorVariant: 'blue', ribbonStyle: 'classic'
     }),
     new Present({
       x: '50%', y: '72%',
-      folder: 'gallery3', style: 'style-3', width: '7rem', height: '4.5rem',
+      folder: 'Film', style: 'icy-blue-gradient', width: '7rem', height: '4.5rem', locked: true,
       hasLid: true, colorVariant: 'green', hasRibbon: true, ribbonStyle: 'classic', triggerSong: 'song2.mp3'
     }),
     new Present({
       x: '65%', y: '69%',
-      folder: 'gallery4', style: 'style-14', width: '4.5rem', height: '6rem',
-      hasRibbon: true, colorVariant: 'gold', ribbonStyle: 'classic'
+      folder: 'Games', style: 'berry-ombre', width: '4.5rem', height: '6rem',
+      hasRibbon: true, colorVariant: 'gold', ribbonStyle: 'classic', locked: true
     }),
     new Present({
       x: '30%', y: '80%',
-      folder: 'gallery5', style: 'style-5', width: '6rem', height: '5rem',
-      hasLid: true, hasRibbon: true, colorVariant: 'purple', ribbonStyle: 'classic', locked: true, triggerSong: 'song3.mp3'
-    }),
-    new Present({
-      x: '45%', y: '78%',
-      folder: 'gallery6', style: 'style-15', width: '5.5rem', height: '5.5rem',
-      hasRibbon: true, colorVariant: 'orange', ribbonStyle: 'classic'
+      folder: 'Gremlin', style: 'creamy-green-polka', width: '6rem', height: '5rem',
+      hasLid: true, hasRibbon: true, colorVariant: 'purple', ribbonStyle: 'classic', triggerSong: 'song3.mp3'
     }),
     new Present({
       x: '60%', y: '77%',
-      folder: 'gallery7', style: 'style-12', width: '6rem', height: '6rem',
+      folder: 'Grinch', style: 'big-cranberry-polka', width: '6rem', height: '6.5rem',
       hasLid: true, colorVariant: 'teal', hasRibbon: true, ribbonStyle: 'classic', triggerSong: 'song4.mp3'
     }),
     new Present({
       x: '40%', y: '75%',
-      folder: 'gallery8', style: 'style-13', width: '4.8rem', height: '5.2rem',
-      hasRibbon: true, colorVariant: 'pink', ribbonStyle: 'classic', locked: true
+      folder: 'Muppets', style: 'soft-aqua-grid', width: '4.8rem', height: '5.2rem',
+      hasRibbon: true, colorVariant: 'pink', ribbonStyle: 'classic'
     })
   ];
+
+// Dynamically get actual rem size
+  const remInPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const containerHeight = window.innerHeight;
+
+  // Sort by visual bottom position
+  presents.sort((a, b) => {
+    const aY = parseFloat(a.y) / 100 * containerHeight;
+    const bY = parseFloat(b.y) / 100 * containerHeight;
+    const aHeight = parseFloat(a.height) * remInPx;
+    const bHeight = parseFloat(b.height) * remInPx;
+
+    const aBottom = aY + aHeight;
+    const bBottom = bY + bHeight;
+
+    return aBottom - bBottom;
+  });
 
   presents.forEach(p => p.render(presentsContainer));
 }

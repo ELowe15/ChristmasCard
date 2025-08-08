@@ -210,10 +210,3 @@ body {
   max-width: 90%;
   pointer-events: none; /* So clicks go to presents behind it */
 }
-
-#gallery img {
-  width: 90%;
-  margin: 10px auto;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px var(--color-shadow-soft);
-}

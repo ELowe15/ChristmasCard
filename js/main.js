@@ -1,5 +1,5 @@
 let correct = false;
-let riddleKey; // global key once solved
+let riddleKey = null; // global key once solved
 // SHA-256 hash (in hex)
 const correctAnswerHash = "10f3525281a9d1d581d7a8de31af7f64938691f1f50790aeb5de064f02dbfbb8";
 
@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cardWrapper.style.display = "flex";
     bgMusic.play();
 
+    document.getElementById("audio-controls-container").style.display = "block";
     document.getElementById("snowSliderContainer").style.display = "block";
     document.getElementById("snowSlider").value = getSliderValueFromInterval(getSnowInterval());
     startSnowTimers();

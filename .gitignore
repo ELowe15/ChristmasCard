@@ -3,6 +3,7 @@
 # Ignore all contents of audio/ and photos/
 Audio/*
 Photos/*
+encrypt_images.py
 
 # But don't ignore the folders themselves
 !Audio/
