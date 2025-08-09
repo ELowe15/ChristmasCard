@@ -57,7 +57,7 @@
 }
 
 .gallery-controls button.close {
-  top: 3rem;
+  top: 0.25rem;
   right: 0.25rem;
   font-size: 1.5rem;
   width: 2rem;

@@ -6,6 +6,7 @@ class Present {
     folder,
     locked = false,
     triggerSong = '',
+    autoTransition = false,
     style = 'classic-red',
     width = null,
     height = null,
@@ -18,6 +19,7 @@ class Present {
     this.folder = folder;
     this.locked = locked;
     this.triggerSong = triggerSong;
+    this.autoTransition = autoTransition;
     this.style = style;
     this.width = width;
     this.height = height;
@@ -112,7 +114,7 @@ class Present {
 
       // Open the present
       if (typeof Gallery !== 'undefined' && Gallery.open) {
-        Gallery.open(this.folder, this.triggerSong);
+        Gallery.open(this.folder, this.triggerSong, this.autoTransition );
       }
 
       // Remove from DOM after open
@@ -136,12 +138,12 @@ function createPresents() {
   const presents = [
     new Present({
       x: '20%', y: '70%',
-      folder: 'Bass', style: 'classic-red', width: '6rem', height: '6rem',
+      folder: 'Bass', autoTransition: true, style: 'classic-red', width: '6rem', height: '6rem',
       hasLid: true, hasRibbon: true, colorVariant: 'red', ribbonStyle: 'classic', triggerSong: 'song1.mp3'
     }),
     new Present({
       x: '35%', y: '68%',
-      folder: 'Charlie', style: 'playful-green-stripes', width: '5rem', height: '5rem',
+      folder: 'Charlie', autoTransition: true, style: 'playful-green-stripes', width: '5rem', height: '5rem',
       hasRibbon: true, colorVariant: 'blue', ribbonStyle: 'classic'
     }),
     new Present({
@@ -156,17 +158,17 @@ function createPresents() {
     }),
     new Present({
       x: '30%', y: '80%',
-      folder: 'Gremlin', style: 'creamy-green-polka', width: '6rem', height: '5rem',
+      folder: 'Gremlin', autoTransition: true, style: 'creamy-green-polka', width: '6rem', height: '5rem',
       hasLid: true, hasRibbon: true, colorVariant: 'purple', ribbonStyle: 'classic', triggerSong: 'song3.mp3'
     }),
     new Present({
       x: '60%', y: '77%',
-      folder: 'Grinch', style: 'big-cranberry-polka', width: '6rem', height: '6.5rem',
+      folder: 'Grinch', autoTransition: true, style: 'big-cranberry-polka', width: '6rem', height: '6.5rem',
       hasLid: true, colorVariant: 'teal', hasRibbon: true, ribbonStyle: 'classic', triggerSong: 'song4.mp3'
     }),
     new Present({
       x: '40%', y: '75%',
-      folder: 'Muppets', style: 'soft-aqua-grid', width: '4.8rem', height: '5.2rem',
+      folder: 'Muppets', autoTransition: true, style: 'soft-aqua-grid', width: '4.8rem', height: '5.2rem',
       hasRibbon: true, colorVariant: 'pink', ribbonStyle: 'classic'
     })
   ];
