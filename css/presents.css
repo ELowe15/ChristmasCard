@@ -294,3 +294,44 @@
   --border-radius: 0.5rem;
   --box-shadow: 0 0.3rem 0.5rem rgba(100, 120, 100, 0.3);
 }
+
+.message-box {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff8e1;
+  border: 2px solid #d32f2f;
+  border-radius: 10px;
+  padding: 15px 20px;
+  z-index: 9999;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  max-width: 300px;
+}
+
+.message-box p {
+  margin: 0 0 10px;
+  color: #b71c1c;
+  font-weight: bold;
+}
+
+.message-box button {
+  background: #d32f2f;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.message-box button:hover {
+  background: #b71c1c;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}

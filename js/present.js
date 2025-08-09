@@ -1,4 +1,7 @@
 class Present {
+  static totalUnlocked = 0;
+  static presents = [];
+
   constructor({
     folder,
     locked = false,
@@ -8,7 +11,7 @@ class Present {
     height = null,
     hasLid = false,
     hasRibbon = false,
-    colorVariant = '', 
+    colorVariant = '',
     ribbonStyle = 'classic',
     x = null, y = null
   }) {
@@ -16,8 +19,8 @@ class Present {
     this.locked = locked;
     this.triggerSong = triggerSong;
     this.style = style;
-    this.width = width;   // e.g. '6rem'
-    this.height = height; // e.g. '4.5rem'
+    this.width = width;
+    this.height = height;
     this.hasLid = hasLid;
     this.hasRibbon = hasRibbon;
     this.colorVariant = colorVariant;
@@ -25,8 +28,34 @@ class Present {
     this.x = x;
     this.y = y;
 
+    Present.presents.push(this);
+    if (!locked) Present.totalUnlocked++;
+
     this.element = this.createElement();
-    this.addListeners(); // Comment this out if Gallery.open is not ready
+    this.addListeners();
+  }
+
+  static showMessage(message) {
+    const existing = document.querySelector('.message-box');
+    if (existing) existing.remove();
+
+    const box = document.createElement('div');
+    box.className = 'message-box';
+
+    const text = document.createElement('p');
+    text.textContent = message;
+
+    const button = document.createElement('button');
+    button.textContent = 'OK';
+    button.onclick = () => box.remove();
+
+    box.appendChild(text);
+    box.appendChild(button);
+    document.body.appendChild(box);
+
+    setTimeout(() => {
+      if (box.parentNode) box.remove();
+    }, 5000);
   }
 
   createElement() {
@@ -34,7 +63,6 @@ class Present {
     el.classList.add('present', this.style);
     el.dataset.folder = this.folder;
     el.dataset.locked = this.locked;
-    el.dataset.triggerSong = this.triggerSong;
 
     if (this.x !== null && this.y !== null) {
       el.style.position = 'absolute';
@@ -49,12 +77,10 @@ class Present {
     if (this.width) el.style.width = this.width;
     if (this.height) el.style.height = this.height;
 
-    // Add main box element
     const box = document.createElement('div');
     box.classList.add('box');
     el.appendChild(box);
 
-        // Add lid element if present
     if (this.hasLid) {
       const lid = document.createElement('div');
       lid.classList.add('lid');
@@ -65,8 +91,7 @@ class Present {
       const ribbon = document.createElement('div');
       ribbon.classList.add('ribbon');
       ribbon.classList.add(this.hasLid ? 'ribbon-on-lid' : 'ribbon-on-box');
-      ribbon.classList.add(this.ribbonStyle); // Add style class for CSS
-
+      ribbon.classList.add(this.ribbonStyle);
       el.appendChild(ribbon);
     }
 
@@ -75,11 +100,28 @@ class Present {
 
   addListeners() {
     this.element.addEventListener('click', () => {
-      if (this.locked === 'true' || this.locked === true) {
-        alert("This present is locked. Please open other presents first.");
-        return;
+      if (this.locked) {
+        if (Present.totalUnlocked > 0) {
+          Present.showMessage("Save your best presents for last, open the other ones first!");
+          return;
+        } else {
+          this.locked = false;
+          this.element.dataset.locked = false;
+        }
       }
-      Gallery.open(this.folder, this.triggerSong);
+
+      // Open the present
+      if (typeof Gallery !== 'undefined' && Gallery.open) {
+        Gallery.open(this.folder, this.triggerSong);
+      }
+
+      // Remove from DOM after open
+      this.element.remove();
+
+      // Decrease unlocked counter if it was unlocked
+      if (!this.locked) {
+        Present.totalUnlocked--;
+      }
     });
   }
 
