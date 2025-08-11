@@ -33,11 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
     popupModal.style.display = "none";
 
     cardWrapper.style.display = "flex";
-    bgMusic.play();
 
     document.getElementById("audio-controls-container").style.display = "block";
     document.getElementById("snowSliderContainer").style.display = "block";
     document.getElementById("snowSlider").value = getSliderValueFromInterval(getSnowInterval());
+    AudioPlayer.getInstance().playSong(0);
     startSnowTimers();
     createPresents();
     correct = true;

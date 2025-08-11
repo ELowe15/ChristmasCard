@@ -118,6 +118,27 @@ class AudioPlayer {
     }
   }
 
+  play() {
+    if (this.audio && this.audio.paused) {
+      this.audio.play().catch(err => console.error("Audio play error:", err));
+    }
+  }
+
+  pause() {
+    if (this.audio && !this.audio.paused) {
+      this.audio.pause();
+    }
+  }
+
+  togglePlayPause() {
+    if (!this.audio) return;
+    if (this.audio.paused) {
+      this.play();
+    } else {
+      this.pause();
+    }
+  }
+
   // Optional: static method to get the single instance
   static getInstance(...args) {
     if (!AudioPlayer._instance) {
