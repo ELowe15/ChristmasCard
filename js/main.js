@@ -1,5 +1,7 @@
 let correct = false;
 let riddleKey = null; // global key once solved
+let cardSwipeEnabled = true;
+
 // SHA-256 hash (in hex)
 const correctAnswerHash = "10f3525281a9d1d581d7a8de31af7f64938691f1f50790aeb5de064f02dbfbb8";
 
@@ -93,6 +95,8 @@ function handleStart(e) {
 }
 
 function handleMove(e) {
+
+  if (!cardSwipeEnabled) return;
 
   const currentX = e.touches ? e.touches[0].clientX : e.clientX;
   const diffX = currentX - startX;

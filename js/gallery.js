@@ -8,10 +8,12 @@ class Gallery {
   static autoTransitionTimeoutId = null;
   static galleryIsOpen = false;
   static snowControls = document.getElementById('snowSliderContainer');
+  static savedSnowInterval;
+  // Configurable timing
+  static fadeDuration = 3000; // ms, fade in/out speed
+  static autoTransitionDelay = 2000; // ms, delay before auto transition to next image
 
   // Flags which loading mode to use
-  // true = preload all images before showing gallery
-  // false = lazy load images as user navigates
   static preloadAllImages = false;
 
   static async open(folder, triggerSong, autoTransition = false, preloadAllImages = false) {
@@ -21,20 +23,22 @@ class Gallery {
     this.preloadAllImages = preloadAllImages;
 
     // Hide card and snow controls
+    cardSwipeEnabled = false;
     document.getElementById("card-wrapper").style.display = "none";
-    if (this.snowControls) this.snowControls.style.display = "none";
+    if (this.snowControls){
+      this.savedSnowInterval = getSnowInterval()/1000;
+      updateSnowInterval(Infinity);
+      this.snowControls.style.display = "none";
+    }
 
     this.container.style.display = "flex";
     this.galleryIsOpen = true;
-
-    // Disable card swipe globally (you must implement this in your card swipe logic)
-    window.galleryIsOpen = true;
+    window.galleryIsOpen = true; // disable card swipe globally
 
     // Setup buttons
     const prevBtn = this.container.querySelector('button.prev');
     const nextBtn = this.container.querySelector('button.next');
     const closeBtn = this.container.querySelector('button.close');
-
     if (prevBtn) prevBtn.onclick = () => this.showImage(this.currentIndex - 1);
     if (nextBtn) nextBtn.onclick = () => this.showImage(this.currentIndex + 1);
     if (closeBtn) closeBtn.onclick = () => this.close();
@@ -43,24 +47,21 @@ class Gallery {
     this.setupSwipeHandlers();
 
     if (this.preloadAllImages) {
-      // Load all images first, then show gallery with first image
       await this.loadAllImages(this.currentFolder);
       this.showImage(0);
     } else {
-      // Lazy load: load index.json, but only load first image now
       await this.loadImageList(this.currentFolder);
       this.showImage(0);
     }
 
-    // Auto transition first -> second image after 2s if enabled
+    // Auto transition first -> second image if enabled
     if (this.autoTransition && this.currentImages.length > 1) {
       this.autoTransitionTimeoutId = setTimeout(() => {
-        this.showImage(1);
-      }, 2000);
+        this.fadeToImage(1);
+      }, this.autoTransitionDelay);
     }
   }
 
-  // Load all images fully, store blob URLs in currentImages
   static async loadAllImages(folder) {
     if (!riddleKey) {
       alert("Decryption key not available. Please enter a valid passphrase.");
@@ -77,12 +78,11 @@ class Gallery {
         this.currentImages.push(url);
       } catch (err) {
         console.error(`❌ Failed to decrypt ${path}:`, err);
-        this.currentImages.push(null); // placeholder so indexes remain consistent
+        this.currentImages.push(null);
       }
     }
   }
 
-  // Lazy load image list only, fill currentImages with null placeholders
   static async loadImageList(folder) {
     if (!riddleKey) {
       alert("Decryption key not available. Please enter a valid passphrase.");
@@ -90,17 +90,12 @@ class Gallery {
     }
     const imagePaths = await fetchEncryptedList(`${folder}/index.json`, folder);
     if (!imagePaths.length) return;
-    this.imagePaths = imagePaths; // save paths for lazy loading later
+    this.imagePaths = imagePaths;
     this.currentImages = new Array(imagePaths.length).fill(null);
   }
 
-  // Load a single image by index, returning a Promise
   static async loadImage(index) {
-    if (this.currentImages[index]) {
-      // Already loaded, return existing URL
-      return this.currentImages[index];
-    }
-
+    if (this.currentImages[index]) return this.currentImages[index];
     try {
       const blob = await decryptImage(this.imagePaths[index], riddleKey);
       const url = URL.createObjectURL(blob);
@@ -117,28 +112,17 @@ class Gallery {
     if (index >= this.currentImages.length) index = 0;
     this.currentIndex = index;
 
-    // Cancel any pending auto-transition
     if (this.autoTransitionTimeoutId) {
       clearTimeout(this.autoTransitionTimeoutId);
       this.autoTransitionTimeoutId = null;
     }
 
-    // Remove old image
     const oldImg = this.container.querySelector('img');
-    if (oldImg) {
-      oldImg.remove();
-    }
+    if (oldImg) oldImg.remove();
 
-    // Show loading indicator if you want here (optional)...
-
-    // Load image (either already loaded or decrypt now)
     let imgSrc = this.currentImages[index];
+    if (!imgSrc) imgSrc = await this.loadImage(index);
     if (!imgSrc) {
-      imgSrc = await this.loadImage(index);
-    }
-
-    if (!imgSrc) {
-      // Show fallback or error image
       console.warn(`Image at index ${index} not available.`);
       return;
     }
@@ -148,44 +132,78 @@ class Gallery {
     img.alt = `Image ${index + 1}`;
     this.container.insertBefore(img, this.container.firstChild);
 
-    // No blocking on load; image will appear when ready
-    img.onload = () => {
-      // Image loaded, you can log or update UI if needed
-      console.log(`Image ${index + 1} loaded.`);
-    };
+    img.onload = () => console.log(`Image ${index + 1} loaded.`);
   }
 
-  static close() {
-    this.container.style.display = "none";
+  static fadeToImage(index) {
+    const oldImg = this.container.querySelector('img');
 
-    // Revoke object URLs to free memory
-    this.currentImages.forEach(url => {
-      if (url) URL.revokeObjectURL(url);
-    });
+    const newImg = document.createElement('img');
+    newImg.style.position = 'absolute';
+    newImg.style.top = '0';
+    newImg.style.left = '0';
+    newImg.style.width = '100%';
+    newImg.style.height = '100%';
+    newImg.style.objectFit = 'contain';
+    newImg.style.opacity = '0';
+    newImg.style.transition = `opacity ${this.fadeDuration}ms ease`;
+    newImg.alt = `Image ${index + 1}`;
+    this.container.appendChild(newImg);
 
-    this.currentImages = [];
-    this.imagePaths = [];
-    this.currentFolder = null;
-    this.currentIndex = 0;
-    this.autoTransition = false;
+    (async () => {
+      let imgSrc = this.currentImages[index];
+      if (!imgSrc) imgSrc = await this.loadImage(index);
+      if (!imgSrc) return;
 
-    // Show card and snow controls again
-    document.getElementById("card-wrapper").style.display = "flex";
-    if (this.snowControls) this.snowControls.style.display = "";
-
-    // Reset gallery open flag and re-enable card swipe
-    this.galleryIsOpen = false;
-    window.galleryIsOpen = false;
+      newImg.src = imgSrc;
+      newImg.onload = () => {
+        newImg.style.opacity = '1';
+        if (oldImg) {
+          oldImg.style.transition = `opacity ${this.fadeDuration}ms ease`;
+          oldImg.style.opacity = '0';
+          setTimeout(() => {
+            if (oldImg && oldImg.parentNode) oldImg.remove();
+          }, this.fadeDuration);
+        }
+        this.currentIndex = index;
+      };
+    })();
   }
 
-  // Setup touch events for swipe navigation on mobile
+static close() {
+  this.container.style.display = "none";
+
+  // Remove all images inside the container
+  const imgs = this.container.querySelectorAll('img');
+  imgs.forEach(img => {
+    if (img.src) URL.revokeObjectURL(img.src); // revoke URL safely if needed
+    img.remove();
+  });
+
+  // Clear image URLs array
+  this.currentImages = [];
+  this.imagePaths = [];
+  this.currentFolder = null;
+  this.currentIndex = 0;
+  this.autoTransition = false;
+
+  cardSwipeEnabled = true;
+  document.getElementById("card-wrapper").style.display = "flex";
+
+  if (this.snowControls){
+    this.snowControls.style.display = "";
+    updateSnowInterval(this.savedSnowInterval); // your fix
+  }
+
+  this.galleryIsOpen = false;
+  window.galleryIsOpen = false;
+}
+
   static setupSwipeHandlers() {
-    if (this.touchHandlerSetup) return; // only once
+    if (this.touchHandlerSetup) return;
     this.touchHandlerSetup = true;
 
-    let startX = 0;
-    let startY = 0;
-    let isMoving = false;
+    let startX = 0, startY = 0, isMoving = false;
 
     this.container.addEventListener('touchstart', e => {
       if (e.touches.length !== 1) return;
@@ -194,27 +212,14 @@ class Gallery {
       isMoving = true;
     }, { passive: true });
 
-    this.container.addEventListener('touchmove', e => {
-      if (!isMoving) return;
-      // Could add logic here to prevent vertical scroll if you want
-    }, { passive: true });
-
     this.container.addEventListener('touchend', e => {
       if (!isMoving) return;
       isMoving = false;
-
-      let endX = e.changedTouches[0].clientX;
-      let endY = e.changedTouches[0].clientY;
-      let dx = endX - startX;
-      let dy = endY - startY;
-
-      // Consider a horizontal swipe if horizontal distance is more than vertical and > 30px
+      let dx = e.changedTouches[0].clientX - startX;
+      let dy = e.changedTouches[0].clientY - startY;
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30) {
-        if (dx > 0) {
-          this.showImage(this.currentIndex - 1);
-        } else {
-          this.showImage(this.currentIndex + 1);
-        }
+        if (dx > 0) this.showImage(this.currentIndex - 1);
+        else this.showImage(this.currentIndex + 1);
       }
     }, { passive: true });
   }
