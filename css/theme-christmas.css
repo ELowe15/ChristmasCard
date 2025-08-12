@@ -35,11 +35,13 @@
   --color-speed-slider-accent: #5dade2;            /* bright blue knob */
   --color-speed-slider-border: rgba(90, 130, 180, 0.5); /* soft icy blue border */
 
-  /* Audio player colors */
-  --color-audio-bg: #fffaf0;           /* warm cream background */
-  --color-audio-btn-bg: #a52a2a;       /* brownish red buttons */
-  --color-audio-btn-bg-hover: #7b1f1f; /* darker brown-red on hover */
-  --color-audio-border: #8b4513;       /* saddle brown borders */
+  --color-audio-bg: #7F1D1D;           /* Deep cranberry red */
+  --color-audio-border: #A85C00;       /* Warm golden amber */
+  --color-audio-btn-bg: #2D6B2D;
+  --color-audio-btn-bg-hover: #3B803B;
+  --color-btn-text: #FAF3E0;            /* Creamy off-white */
+  --color-select-bg: #3E1F00;           /* Dark cocoa brown */
+  --color-border-default: #A85C00;      /* Same warm amber */
 
   /* Video shadow */
   --color-video-shadow: rgba(0, 0, 0, 0.25);

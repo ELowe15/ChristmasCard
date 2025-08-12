@@ -6,7 +6,6 @@ class Gallery {
   static currentIndex = 0;
   static autoTransition = false;
   static autoTransitionTimeoutId = null;
-  static snowControls = document.getElementById('snowSliderContainer');
   static savedSnowInterval;
   // Configurable timing
   static fadeDuration = 3000; // ms, fade in/out speed
@@ -15,6 +14,11 @@ class Gallery {
   // Flags which loading mode to use
   static preloadAllImages = false;
   static isTransitioning = false;
+
+  // New flag: whether to wrap around when swiping past first/last image
+  static wrapAround = false; // false to disable looping
+
+  static allPresentsOpened = false;
 
   static setButtonsVisibility(state) {
     const prevBtn = this.container.querySelector('button.prev');
@@ -25,20 +29,21 @@ class Gallery {
     });
   }
 
-  static async open(folder, triggerSong, autoTransition = false, preloadAllImages = false) {
+  static async open(folder, triggerSong, autoTransition = false, preloadAllImages = false, wrapAround) {
     this.currentFolder = `${this.baseEncryptedFolder}/${folder}`;
     this.currentIndex = 0;
     this.autoTransition = autoTransition;
     this.preloadAllImages = preloadAllImages;
+    this.wrapAround = wrapAround;
 
-    // Hide card and snow controls
+    if (this.allPresentsOpened){
+      this.wrapAround = true;
+      this.autoTransition = false;
+    }
+
+    // Hide card
     cardSwipeEnabled = false;
     document.getElementById("card-wrapper").style.display = "none";
-    if (this.snowControls) {
-      this.savedSnowInterval = getSnowInterval() / 1000;
-      updateSnowInterval(Infinity);
-      this.snowControls.style.right = "2.5rem";
-    }
 
     this.container.style.display = "flex";
 
@@ -127,8 +132,15 @@ class Gallery {
   }
 
   static async showImage(index) {
-    if (index < 0) index = this.currentImages.length - 1;
-    if (index >= this.currentImages.length) index = 0;
+    // Handle wrapAround flag:
+    if (index < 0) {
+      if (this.wrapAround) index = this.currentImages.length - 1;
+      else this.close(); // stop at first image
+    }
+    if (index >= this.currentImages.length) {
+      if (this.wrapAround) index = 0;
+      else this.close(); // stop at last image
+    }
     this.currentIndex = index;
 
     if (this.autoTransitionTimeoutId) {
@@ -170,7 +182,6 @@ class Gallery {
   }
 
   static fadeToImage(index) {
-
     // Remove any existing transitioning images besides the visible one
     const existingTransitionImgs = this.container.querySelectorAll('img.transitioning');
     existingTransitionImgs.forEach(img => img.remove());
@@ -198,6 +209,7 @@ class Gallery {
       if (!imgSrc) {
         this.isTransitioning = false;
         this.setButtonsVisibility('visible');
+        newImg.remove();
         return;
       }
 
@@ -205,7 +217,6 @@ class Gallery {
 
       // Force a fade even if image loads instantly:
       newImg.onload = () => {
-        // Start with opacity 0, trigger paint, then set opacity 1
         requestAnimationFrame(() => {
           newImg.style.opacity = '1';
         });
@@ -226,6 +237,12 @@ class Gallery {
 
           this.preloadNextImage(index);
         }, this.fadeDuration);
+      };
+
+      newImg.onerror = () => {
+        this.isTransitioning = false;
+        this.setButtonsVisibility('visible');
+        newImg.remove();
       };
     })();
 
@@ -255,10 +272,8 @@ class Gallery {
     cardSwipeEnabled = true;
     document.getElementById("card-wrapper").style.display = "flex";
 
-    if (this.snowControls) {
-      this.snowControls.style.right = "0.2em";
-      updateSnowInterval(this.savedSnowInterval); // your fix
-    }
+    // Check if all presents have been opened:
+    this.allPresentsOpened = Present.checkAllOpened()
   }
 
   static setupSwipeHandlers() {

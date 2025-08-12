@@ -120,6 +120,9 @@ class Present {
       // Remove from DOM after open
       this.element.remove();
 
+      // Remove this instance from the list
+      Present.presents = Present.presents.filter(p => p !== this);
+
       // Decrease unlocked counter if it was unlocked
       if (!this.locked) {
         Present.totalUnlocked--;
@@ -129,6 +132,17 @@ class Present {
 
   render(container) {
     container.appendChild(this.element);
+  }
+
+  static checkAllOpened() {
+    if (Present.presents.length === 0) {
+      Present.showMessage("Congratulations! You've opened all the presents!");
+      createPresents();
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 }
 
