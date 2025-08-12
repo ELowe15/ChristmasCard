@@ -6,9 +6,8 @@ class Gallery {
   static currentIndex = 0;
   static autoTransition = false;
   static autoTransitionTimeoutId = null;
-  static savedSnowInterval;
   // Configurable timing
-  static fadeDuration = 3000; // ms, fade in/out speed
+  static fadeDuration = 2000; // ms, fade in/out speed
   static autoTransitionDelay = 2000; // ms, delay before auto transition to next image
 
   // Flags which loading mode to use
@@ -20,6 +19,10 @@ class Gallery {
 
   static allPresentsOpened = false;
 
+  static triggerSongs = [];
+  static triggerPhotos = [];
+  static imageIndexMap;
+
   static setButtonsVisibility(state) {
     const prevBtn = this.container.querySelector('button.prev');
     const nextBtn = this.container.querySelector('button.next');
@@ -29,16 +32,23 @@ class Gallery {
     });
   }
 
-  static async open(folder, triggerSong, autoTransition = false, preloadAllImages = false, wrapAround) {
+  static async open(folder, triggerSongs = [], triggerPhotos = [], autoTransition = false, preloadAllImages = false, wrapAround) {
     this.currentFolder = `${this.baseEncryptedFolder}/${folder}`;
     this.currentIndex = 0;
     this.autoTransition = autoTransition;
     this.preloadAllImages = preloadAllImages;
     this.wrapAround = wrapAround;
+    this.triggerSongs = triggerSongs;
+    this.triggerPhotos = triggerPhotos;
 
     if (this.allPresentsOpened){
       this.wrapAround = true;
       this.autoTransition = false;
+    }
+
+    // If no trigger photos provided → play first trigger song immediately
+    if (triggerPhotos.length === 0 && triggerSongs.length > 0) {
+        AudioPlayer.getInstance().playSongByName(triggerSongs[0]); 
     }
 
     // Hide card
@@ -107,6 +117,16 @@ class Gallery {
     }
   }
 
+  static stripAllExtensions(filename) {
+    // Remove folder path, keep only file basename
+    const baseName = filename.split('/').pop();
+    // Remove everything from the first dot (.) to the end
+    const firstDotIndex = baseName.indexOf('.');
+    if (firstDotIndex === -1) return baseName.toLowerCase();
+    return baseName.slice(0, firstDotIndex).toLowerCase();
+  }
+
+
   static async loadImageList(folder) {
     if (!riddleKey) {
       alert("Decryption key not available. Please enter a valid passphrase.");
@@ -116,6 +136,14 @@ class Gallery {
     if (!imagePaths.length) return;
     this.imagePaths = imagePaths;
     this.currentImages = new Array(imagePaths.length).fill(null);
+
+    // Build map: base filename (no extension) → index
+    this.imageIndexMap = {};
+    imagePaths.forEach((path, idx) => {
+        const name = this.stripAllExtensions(path);
+        this.imageIndexMap[name] = idx;
+    });
+      console.log("Image Index Map built:", this.imageIndexMap);
   }
 
   static async loadImage(index) {
@@ -142,6 +170,24 @@ class Gallery {
       else this.close(); // stop at last image
     }
     this.currentIndex = index;
+console.log(`Showing image index: ${index}`);
+
+  if (this.imageIndexMap && this.triggerPhotos && this.triggerSongs) {
+   const currentFileName = this.stripAllExtensions(this.imagePaths[this.currentIndex]);
+    console.log(`Current image file name: ${currentFileName}`);
+
+    for (let i = 0; i < this.triggerPhotos.length; i++) {
+      const triggerPhotoName = this.stripAllExtensions(this.triggerPhotos[i]);
+      const mappedIndex = this.imageIndexMap[triggerPhotoName];
+      console.log(`Trigger photo [${i}]: '${triggerPhotoName}', mappedIndex: ${mappedIndex}`);
+
+      if (mappedIndex === this.currentIndex && this.triggerSongs[i]) {
+        console.log(`Playing trigger song '${this.triggerSongs[i]}' for image '${currentFileName}'`);
+        AudioPlayer.getInstance().playSongByName(this.triggerSongs[i]);
+        break;
+      }
+    }
+  }
 
     if (this.autoTransitionTimeoutId) {
       clearTimeout(this.autoTransitionTimeoutId);

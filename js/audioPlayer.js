@@ -107,9 +107,8 @@ class AudioPlayer {
     });
   }
 
-  // New method: play by song name (without extension), case insensitive
   playSongByName(name) {
-    const key = name.toLowerCase();
+    const key = name.replace(/\.mp3$/i, "").toLowerCase();
     if (key in this.songMap) {
       this.currentIndex = this.songMap[key];
       this.playSong(this.currentIndex);

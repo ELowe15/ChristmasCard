@@ -5,7 +5,8 @@ class Present {
   constructor({
     folder,
     locked = false,
-    triggerSong = '',
+    triggerSongs = [],
+    triggerPhotos = [],
     autoTransition = false,
     style = 'classic-red',
     width = null,
@@ -18,7 +19,8 @@ class Present {
   }) {
     this.folder = folder;
     this.locked = locked;
-    this.triggerSong = triggerSong;
+    this.triggerSongs = triggerSongs;
+    this.triggerPhotos = triggerPhotos;
     this.autoTransition = autoTransition;
     this.style = style;
     this.width = width;
@@ -114,7 +116,7 @@ class Present {
 
       // Open the present
       if (typeof Gallery !== 'undefined' && Gallery.open) {
-        Gallery.open(this.folder, this.triggerSong, this.autoTransition );
+        Gallery.open(this.folder, this.triggerSongs, this.triggerPhotos, this.autoTransition );
       }
 
       // Remove from DOM after open
@@ -153,7 +155,7 @@ function createPresents() {
     new Present({
       x: '20%', y: '70%',
       folder: 'Bass', autoTransition: true, style: 'classic-red', width: '6rem', height: '6rem',
-      hasLid: true, hasRibbon: true, colorVariant: 'red', ribbonStyle: 'classic', triggerSong: 'song1.mp3'
+      hasLid: true, hasRibbon: true, colorVariant: 'red', ribbonStyle: 'classic', triggerSongs: ['Rudolph.mp3']
     }),
     new Present({
       x: '35%', y: '68%',
@@ -162,8 +164,9 @@ function createPresents() {
     }),
     new Present({
       x: '50%', y: '72%',
-      folder: 'Film', style: 'icy-blue-gradient', width: '7rem', height: '4.5rem', locked: true,
-      hasLid: true, colorVariant: 'green', hasRibbon: true, ribbonStyle: 'classic', triggerSong: 'song2.mp3'
+      folder: 'Film', style: 'icy-blue-gradient', width: '7rem', height: '4.5rem', locked: false,
+      hasLid: true, colorVariant: 'green', hasRibbon: true, ribbonStyle: 'classic', triggerSongs: ['Mele Kalikimaka'],
+      triggerPhotos: ['978E893A-17DE-40CB-8424-BEDDAC97DA70']
     }),
     new Present({
       x: '65%', y: '69%',
@@ -173,17 +176,17 @@ function createPresents() {
     new Present({
       x: '30%', y: '80%',
       folder: 'Gremlin', autoTransition: true, style: 'creamy-green-polka', width: '6rem', height: '5rem',
-      hasLid: true, hasRibbon: true, colorVariant: 'purple', ribbonStyle: 'classic', triggerSong: 'song3.mp3'
+      hasLid: true, hasRibbon: true, colorVariant: 'purple', ribbonStyle: 'classic'
     }),
     new Present({
       x: '60%', y: '77%',
       folder: 'Grinch', autoTransition: true, style: 'big-cranberry-polka', width: '6rem', height: '6.5rem',
-      hasLid: true, colorVariant: 'teal', hasRibbon: true, ribbonStyle: 'classic', triggerSong: 'song4.mp3'
+      hasLid: true, colorVariant: 'teal', hasRibbon: true, ribbonStyle: 'classic', triggerSongs: ['Mr Grinch']
     }),
     new Present({
       x: '40%', y: '75%',
       folder: 'Muppets', autoTransition: true, style: 'soft-aqua-grid', width: '4.8rem', height: '5.2rem',
-      hasRibbon: true, colorVariant: 'pink', ribbonStyle: 'classic'
+      hasRibbon: true, colorVariant: 'pink', ribbonStyle: 'classic', triggerSongs: ['Scrooge']
     })
   ];
 
