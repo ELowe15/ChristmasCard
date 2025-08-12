@@ -151,44 +151,88 @@ class Present {
 function createPresents() {
   const presentsContainer = document.getElementById('presents-container');
 
-  const presents = [
-    new Present({
-      x: '20%', y: '70%',
-      folder: 'Bass', autoTransition: true, style: 'classic-red', width: '6rem', height: '6rem',
-      hasLid: true, hasRibbon: true, colorVariant: 'red', ribbonStyle: 'classic', triggerSongs: ['Rudolph.mp3']
-    }),
-    new Present({
-      x: '35%', y: '68%',
-      folder: 'Charlie', autoTransition: true, style: 'playful-green-stripes', width: '5rem', height: '5rem',
-      hasRibbon: true, colorVariant: 'blue', ribbonStyle: 'classic'
-    }),
-    new Present({
-      x: '50%', y: '72%',
-      folder: 'Film', style: 'icy-blue-gradient', width: '7rem', height: '4.5rem', locked: false,
-      hasLid: true, colorVariant: 'green', hasRibbon: true, ribbonStyle: 'classic', triggerSongs: ['Mele Kalikimaka'],
-      triggerPhotos: ['978E893A-17DE-40CB-8424-BEDDAC97DA70']
-    }),
-    new Present({
-      x: '65%', y: '69%',
-      folder: 'Games', style: 'berry-ombre', width: '4.5rem', height: '6rem',
-      hasRibbon: true, colorVariant: 'gold', ribbonStyle: 'classic', locked: true
-    }),
-    new Present({
-      x: '30%', y: '80%',
-      folder: 'Gremlin', autoTransition: true, style: 'creamy-green-polka', width: '6rem', height: '5rem',
-      hasLid: true, hasRibbon: true, colorVariant: 'purple', ribbonStyle: 'classic'
-    }),
-    new Present({
-      x: '60%', y: '77%',
-      folder: 'Grinch', autoTransition: true, style: 'big-cranberry-polka', width: '6rem', height: '6.5rem',
-      hasLid: true, colorVariant: 'teal', hasRibbon: true, ribbonStyle: 'classic', triggerSongs: ['Mr Grinch']
-    }),
-    new Present({
-      x: '40%', y: '75%',
-      folder: 'Muppets', autoTransition: true, style: 'soft-aqua-grid', width: '4.8rem', height: '5.2rem',
-      hasRibbon: true, colorVariant: 'pink', ribbonStyle: 'classic', triggerSongs: ['Scrooge']
-    })
-  ];
+const presents = [
+  new Present({
+    x: '0%', y: '70%',
+    folder: 'Bass',
+    autoTransition: true,
+    style: 'candy-cane-stripes',
+    width: '6rem', height: '6rem',
+    hasLid: true,
+    hasRibbon: true,
+    colorVariant: 'gold',
+    ribbonStyle: 'classic',
+    triggerSongs: ['Rudolph.mp3']
+  }),
+  new Present({
+    x: '15%', y: '68%',
+    folder: 'Charlie',
+    autoTransition: true,
+    style: 'charlie-stripes',
+    width: '5rem', height: '5rem',
+    hasRibbon: true,
+    colorVariant: 'brown',
+    ribbonStyle: 'classic'
+  }),
+  new Present({
+    x: '25%', y: '72%',
+    folder: 'Film',
+    style: 'film-reel-clean',
+    width: '7rem', height: '4.5rem',
+    locked: false,
+    hasLid: true,
+    hasRibbon: false,
+    colorVariant: 'black-white',
+    ribbonStyle: 'classic',
+    triggerSongs: ['Mele Kalikimaka'],
+    triggerPhotos: ['978E893A-17DE-40CB-8424-BEDDAC97DA70']
+  }),
+  new Present({
+    x: '40%', y: '50%',
+    folder: 'Games',
+    style: 'games-pixels',
+    width: '4.5rem', height: '6rem',
+    hasRibbon: true,
+    colorVariant: 'red-white',
+    ribbonStyle: 'classic',
+    locked: true
+  }),
+  new Present({
+    x: '50%', y: '80%',
+    folder: 'Gremlin',
+    autoTransition: true,
+    style: 'gremlin-splatter',  // Keep your previous berry ombre style
+    width: '6rem', height: '5rem',
+    hasLid: true,
+    hasRibbon: true,
+    colorVariant: 'purple',
+    ribbonStyle: 'classic'
+  }),
+  new Present({
+    x: '65%', y: '77%',
+    folder: 'Grinch',
+    autoTransition: true,
+    style: 'grinch-fur', // Assuming you like the fur style from before
+    width: '6rem', height: '6.5rem',
+    hasLid: true,
+    colorVariant: 'olive',
+    hasRibbon: true,
+    ribbonStyle: 'classic',
+    triggerSongs: ['Mr Grinch']
+  }),
+  new Present({
+    x: '80%', y: '55%',
+    folder: 'Muppets',
+    autoTransition: true,
+    style: 'muppets-confetti',
+    width: '4.8rem', height: '5.2rem',
+    hasRibbon: true,
+    colorVariant: 'multi',
+    ribbonStyle: 'classic',
+    triggerSongs: ['Scrooge']
+  }),
+];
+
 
 // Dynamically get actual rem size
   const remInPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
