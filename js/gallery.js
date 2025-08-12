@@ -117,43 +117,47 @@ class Gallery {
     }
   }
 
-static async showImage(index) {
-  if (index < 0) index = this.currentImages.length - 1;
-  if (index >= this.currentImages.length) index = 0;
-  this.currentIndex = index;
+  static async showImage(index) {
+    if (index < 0) index = this.currentImages.length - 1;
+    if (index >= this.currentImages.length) index = 0;
+    this.currentIndex = index;
 
-  if (this.autoTransitionTimeoutId) {
-    clearTimeout(this.autoTransitionTimeoutId);
-    this.autoTransitionTimeoutId = null;
+    if (this.autoTransitionTimeoutId) {
+      clearTimeout(this.autoTransitionTimeoutId);
+      this.autoTransitionTimeoutId = null;
+    }
+
+    const oldImg = this.container.querySelector('img');
+    if (oldImg) oldImg.remove();
+
+    let imgSrc = this.currentImages[index];
+    if (!imgSrc) imgSrc = await this.loadImage(index);
+    if (!imgSrc) {
+      console.warn(`Image at index ${index} not available.`);
+      return;
+    }
+
+    const img = document.createElement('img');
+    img.src = imgSrc;
+    img.alt = `Image ${index + 1}`;
+    this.container.insertBefore(img, this.container.firstChild);
+
+    img.onload = () => console.log(`Image ${index + 1} loaded.`);
+
+    preloadNextImage(index);
   }
 
-  const oldImg = this.container.querySelector('img');
-  if (oldImg) oldImg.remove();
-
-  let imgSrc = this.currentImages[index];
-  if (!imgSrc) imgSrc = await this.loadImage(index);
-  if (!imgSrc) {
-    console.warn(`Image at index ${index} not available.`);
-    return;
+  static async preloadNextImage(index){
+    //code to preload next image
+    const nextIndex = (index + 1) % this.currentImages.length;
+    if (!this.currentImages[nextIndex]) {
+      this.loadImage(nextIndex).then(() => {
+        console.log(`Preloaded image ${nextIndex + 1}`);
+      }).catch(() => {
+        console.warn(`Failed to preload image ${nextIndex + 1}`);
+      });
+    }
   }
-
-  const img = document.createElement('img');
-  img.src = imgSrc;
-  img.alt = `Image ${index + 1}`;
-  this.container.insertBefore(img, this.container.firstChild);
-
-  img.onload = () => console.log(`Image ${index + 1} loaded.`);
-
-  // === New code to preload next image ===
-  const nextIndex = (index + 1) % this.currentImages.length;
-  if (!this.currentImages[nextIndex]) {
-    this.loadImage(nextIndex).then(() => {
-      console.log(`Preloaded image ${nextIndex + 1}`);
-    }).catch(() => {
-      console.warn(`Failed to preload image ${nextIndex + 1}`);
-    });
-  }
-}
 
   static fadeToImage(index) {
     if (this.isTransitioning) return; // already mid-fade
@@ -195,6 +199,8 @@ static async showImage(index) {
             [prevBtn, nextBtn, closeBtn].forEach(btn => {
               if (btn) btn.style.visibility = '';
             });
+
+            preloadNextImage(index);
           }, this.fadeDuration);
         }
         this.currentIndex = index;
