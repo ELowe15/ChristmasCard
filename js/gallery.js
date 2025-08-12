@@ -6,7 +6,6 @@ class Gallery {
   static currentIndex = 0;
   static autoTransition = false;
   static autoTransitionTimeoutId = null;
-  static galleryIsOpen = false;
   static snowControls = document.getElementById('snowSliderContainer');
   static savedSnowInterval;
   // Configurable timing
@@ -33,8 +32,6 @@ class Gallery {
     }
 
     this.container.style.display = "flex";
-    this.galleryIsOpen = true;
-    window.galleryIsOpen = true; // disable card swipe globally
 
     // Setup buttons
     const prevBtn = this.container.querySelector('button.prev');
@@ -161,8 +158,6 @@ class Gallery {
   }
 
   static fadeToImage(index) {
-    if (this.isTransitioning) return; // already mid-fade
-
     const prevBtn = this.container.querySelector('button.prev');
     const nextBtn = this.container.querySelector('button.next');
     const closeBtn = this.container.querySelector('button.close');
@@ -232,9 +227,6 @@ static close() {
     this.snowControls.style.display = "";
     updateSnowInterval(this.savedSnowInterval); // your fix
   }
-
-  this.galleryIsOpen = false;
-  window.galleryIsOpen = false;
 }
 
   static setupSwipeHandlers() {
