@@ -63,6 +63,7 @@ class Gallery {
 
     // Auto transition first -> second image if enabled
     if (this.autoTransition && this.currentImages.length > 1) {
+      this.isTransitioning = true;
       [prevBtn, nextBtn, closeBtn].forEach(btn => {
         if (btn) btn.style.visibility = 'hidden';
     });
@@ -161,7 +162,6 @@ class Gallery {
 
   static fadeToImage(index) {
     if (this.isTransitioning) return; // already mid-fade
-    this.isTransitioning = true;
 
     const prevBtn = this.container.querySelector('button.prev');
     const nextBtn = this.container.querySelector('button.next');
