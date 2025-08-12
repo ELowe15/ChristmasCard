@@ -49,8 +49,6 @@
   top: 0.25rem;
   right: 0.25rem;
   font-size: 2rem;
-  background: transparent;
-  background-color: rgba(255,255,255 0.5); /* black with 50% transparency */
 }
 
 .fade {

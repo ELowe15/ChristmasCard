@@ -15,6 +15,7 @@ class Gallery {
 
   // Flags which loading mode to use
   static preloadAllImages = false;
+  static isTransitioning = false;
 
   static async open(folder, triggerSong, autoTransition = false, preloadAllImages = false) {
     this.currentFolder = `${this.baseEncryptedFolder}/${folder}`;
@@ -39,9 +40,15 @@ class Gallery {
     const prevBtn = this.container.querySelector('button.prev');
     const nextBtn = this.container.querySelector('button.next');
     const closeBtn = this.container.querySelector('button.close');
-    if (prevBtn) prevBtn.onclick = () => this.showImage(this.currentIndex - 1);
-    if (nextBtn) nextBtn.onclick = () => this.showImage(this.currentIndex + 1);
-    if (closeBtn) closeBtn.onclick = () => this.close();
+    if (prevBtn) prevBtn.onclick = () => {
+      if (!this.isTransitioning) this.showImage(this.currentIndex - 1);
+    };
+    if (nextBtn) nextBtn.onclick = () => {
+      if (!this.isTransitioning) this.showImage(this.currentIndex + 1);
+    };
+    if (closeBtn) closeBtn.onclick = () => {
+      if (!this.isTransitioning) this.close();
+    };
 
     // Setup swipe handlers for mobile
     this.setupSwipeHandlers();
@@ -56,6 +63,9 @@ class Gallery {
 
     // Auto transition first -> second image if enabled
     if (this.autoTransition && this.currentImages.length > 1) {
+      [prevBtn, nextBtn, closeBtn].forEach(btn => {
+        if (btn) btn.style.visibility = 'hidden';
+    });
       this.autoTransitionTimeoutId = setTimeout(() => {
         this.fadeToImage(1);
       }, this.autoTransitionDelay);
@@ -146,6 +156,13 @@ static async showImage(index) {
 }
 
   static fadeToImage(index) {
+    if (this.isTransitioning) return; // already mid-fade
+    this.isTransitioning = true;
+
+    const prevBtn = this.container.querySelector('button.prev');
+    const nextBtn = this.container.querySelector('button.next');
+    const closeBtn = this.container.querySelector('button.close');
+
     const oldImg = this.container.querySelector('img');
 
     const newImg = document.createElement('img');
@@ -173,19 +190,15 @@ static async showImage(index) {
           oldImg.style.opacity = '0';
           setTimeout(() => {
             if (oldImg && oldImg.parentNode) oldImg.remove();
+
+            this.isTransitioning = false;
+            [prevBtn, nextBtn, closeBtn].forEach(btn => {
+              if (btn) btn.style.visibility = '';
+            });
           }, this.fadeDuration);
         }
         this.currentIndex = index;
-
-        const nextIndex = index + 1;
-        if (nextIndex < this.totalImages) {
-          if (!this.currentImages[nextIndex]) {
-            this.loadImage(nextIndex).then(src => {
-              if (src) this.currentImages[nextIndex] = src;
-            });
-          }
-        }
-      };
+      }
     })();
   }
 
@@ -236,7 +249,7 @@ static close() {
       isMoving = false;
       let dx = e.changedTouches[0].clientX - startX;
       let dy = e.changedTouches[0].clientY - startY;
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30) {
+      if (!this.isTransitioning && Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 30) {
         if (dx > 0) this.showImage(this.currentIndex - 1);
         else this.showImage(this.currentIndex + 1);
       }
