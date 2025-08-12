@@ -16,6 +16,15 @@ class Gallery {
   static preloadAllImages = false;
   static isTransitioning = false;
 
+  static setButtonsVisibility(state) {
+    const prevBtn = this.container.querySelector('button.prev');
+    const nextBtn = this.container.querySelector('button.next');
+    const closeBtn = this.container.querySelector('button.close');
+    [prevBtn, nextBtn, closeBtn].forEach(btn => {
+      if (btn) btn.style.visibility = state;
+    });
+  }
+
   static async open(folder, triggerSong, autoTransition = false, preloadAllImages = false) {
     this.currentFolder = `${this.baseEncryptedFolder}/${folder}`;
     this.currentIndex = 0;
@@ -25,10 +34,10 @@ class Gallery {
     // Hide card and snow controls
     cardSwipeEnabled = false;
     document.getElementById("card-wrapper").style.display = "none";
-    if (this.snowControls){
-      this.savedSnowInterval = getSnowInterval()/1000;
+    if (this.snowControls) {
+      this.savedSnowInterval = getSnowInterval() / 1000;
       updateSnowInterval(Infinity);
-      this.snowControls.style.display = "none";
+      this.snowControls.style.right = "2.5rem";
     }
 
     this.container.style.display = "flex";
@@ -50,6 +59,9 @@ class Gallery {
     // Setup swipe handlers for mobile
     this.setupSwipeHandlers();
 
+    // Hide buttons initially, they'll be shown after image is loaded/faded
+    this.setButtonsVisibility('hidden');
+
     if (this.preloadAllImages) {
       await this.loadAllImages(this.currentFolder);
       this.showImage(0);
@@ -61,12 +73,11 @@ class Gallery {
     // Auto transition first -> second image if enabled
     if (this.autoTransition && this.currentImages.length > 1) {
       this.isTransitioning = true;
-      [prevBtn, nextBtn, closeBtn].forEach(btn => {
-        if (btn) btn.style.visibility = 'hidden';
-    });
       this.autoTransitionTimeoutId = setTimeout(() => {
         this.fadeToImage(1);
       }, this.autoTransitionDelay);
+    } else {
+      this.setButtonsVisibility('visible');
     }
   }
 
@@ -125,8 +136,9 @@ class Gallery {
       this.autoTransitionTimeoutId = null;
     }
 
-    const oldImg = this.container.querySelector('img');
-    if (oldImg) oldImg.remove();
+    // Remove any existing images before showing new one
+    const oldImgs = this.container.querySelectorAll('img');
+    oldImgs.forEach(img => img.remove());
 
     let imgSrc = this.currentImages[index];
     if (!imgSrc) imgSrc = await this.loadImage(index);
@@ -142,10 +154,10 @@ class Gallery {
 
     img.onload = () => console.log(`Image ${index + 1} loaded.`);
 
-    preloadNextImage(index);
+    this.preloadNextImage(index);
   }
 
-  static async preloadNextImage(index){
+  static async preloadNextImage(index) {
     //code to preload next image
     const nextIndex = (index + 1) % this.currentImages.length;
     if (!this.currentImages[nextIndex]) {
@@ -158,76 +170,96 @@ class Gallery {
   }
 
   static fadeToImage(index) {
-    const prevBtn = this.container.querySelector('button.prev');
-    const nextBtn = this.container.querySelector('button.next');
-    const closeBtn = this.container.querySelector('button.close');
 
-    const oldImg = this.container.querySelector('img');
+    // Remove any existing transitioning images besides the visible one
+    const existingTransitionImgs = this.container.querySelectorAll('img.transitioning');
+    existingTransitionImgs.forEach(img => img.remove());
+
+    const oldImg = this.container.querySelector('img:not(.transitioning)');
 
     const newImg = document.createElement('img');
-    newImg.style.position = 'absolute';
-    newImg.style.top = '0';
-    newImg.style.left = '0';
-    newImg.style.width = '100%';
-    newImg.style.height = '100%';
-    newImg.style.objectFit = 'contain';
-    newImg.style.opacity = '0';
-    newImg.style.transition = `opacity ${this.fadeDuration}ms ease`;
+    newImg.classList.add('transitioning'); // mark as transition image
+    Object.assign(newImg.style, {
+      position: 'absolute',
+      top: '0',
+      left: '0',
+      width: '100%',
+      height: '100%',
+      objectFit: 'contain',
+      opacity: '0',
+      transition: `opacity ${this.fadeDuration}ms ease`,
+    });
     newImg.alt = `Image ${index + 1}`;
     this.container.appendChild(newImg);
 
     (async () => {
       let imgSrc = this.currentImages[index];
       if (!imgSrc) imgSrc = await this.loadImage(index);
-      if (!imgSrc) return;
+      if (!imgSrc) {
+        this.isTransitioning = false;
+        this.setButtonsVisibility('visible');
+        return;
+      }
 
       newImg.src = imgSrc;
+
+      // Force a fade even if image loads instantly:
       newImg.onload = () => {
-        newImg.style.opacity = '1';
+        // Start with opacity 0, trigger paint, then set opacity 1
+        requestAnimationFrame(() => {
+          newImg.style.opacity = '1';
+        });
+
         if (oldImg) {
           oldImg.style.transition = `opacity ${this.fadeDuration}ms ease`;
           oldImg.style.opacity = '0';
-          setTimeout(() => {
-            if (oldImg && oldImg.parentNode) oldImg.remove();
-
-            this.isTransitioning = false;
-            [prevBtn, nextBtn, closeBtn].forEach(btn => {
-              if (btn) btn.style.visibility = '';
-            });
-
-            preloadNextImage(index);
-          }, this.fadeDuration);
         }
-        this.currentIndex = index;
-      }
+
+        setTimeout(() => {
+          if (oldImg && oldImg.parentNode) oldImg.remove();
+
+          // Remove the transitioning class, so newImg becomes the only visible one
+          newImg.classList.remove('transitioning');
+
+          this.isTransitioning = false;
+          this.setButtonsVisibility('visible');
+
+          this.preloadNextImage(index);
+        }, this.fadeDuration);
+      };
     })();
+
+    this.currentIndex = index;
   }
 
-static close() {
-  this.container.style.display = "none";
+  static close() {
+    this.setButtonsVisibility('hidden');
 
-  // Remove all images inside the container
-  const imgs = this.container.querySelectorAll('img');
-  imgs.forEach(img => {
-    if (img.src) URL.revokeObjectURL(img.src); // revoke URL safely if needed
-    img.remove();
-  });
+    this.container.style.display = "none";
 
-  // Clear image URLs array
-  this.currentImages = [];
-  this.imagePaths = [];
-  this.currentFolder = null;
-  this.currentIndex = 0;
-  this.autoTransition = false;
+    // Remove all images inside the container
+    const imgs = this.container.querySelectorAll('img');
+    imgs.forEach(img => {
+      if (img.src) URL.revokeObjectURL(img.src); // revoke URL safely if needed
+      img.remove();
+    });
 
-  cardSwipeEnabled = true;
-  document.getElementById("card-wrapper").style.display = "flex";
+    // Clear image URLs array
+    this.currentImages = [];
+    this.imagePaths = [];
+    this.currentFolder = null;
+    this.currentIndex = 0;
+    this.autoTransition = false;
+    this.isTransitioning = false;
 
-  if (this.snowControls){
-    this.snowControls.style.display = "";
-    updateSnowInterval(this.savedSnowInterval); // your fix
+    cardSwipeEnabled = true;
+    document.getElementById("card-wrapper").style.display = "flex";
+
+    if (this.snowControls) {
+      this.snowControls.style.right = "0.2em";
+      updateSnowInterval(this.savedSnowInterval); // your fix
+    }
   }
-}
 
   static setupSwipeHandlers() {
     if (this.touchHandlerSetup) return;

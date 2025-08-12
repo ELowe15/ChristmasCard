@@ -18,6 +18,7 @@
 .gallery-controls button {
   background: none; /* removes default white background */
   border: none;     /* removes default black border */
+  visibility: hidden;
   position: absolute;
   width: 2rem;
   height: 2rem;

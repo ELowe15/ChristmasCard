@@ -143,7 +143,6 @@ body {
   width: 90%;               /* Almost the full width of the card */
   max-width: 500px;         /* Optional: prevent it from getting too huge on wide screens */
   display: block;           /* Ensure it's treated like a block element */
-  margin: 20px auto;        /* Center it horizontally and add spacing */
   border-radius: 16px;      /* Smooth, rounded corners */
   box-shadow: 0 4px 12px var(--color-shadow-medium);
 }
