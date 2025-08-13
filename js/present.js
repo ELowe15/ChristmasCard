@@ -153,7 +153,7 @@ function createPresents() {
 
 const presents = [
   new Present({
-    x: '0%', y: '70%',
+    x: '35%', y: '75%',
     folder: 'Bass',
     autoTransition: true,
     style: 'candy-cane-stripes',
@@ -165,20 +165,21 @@ const presents = [
     triggerSongs: ['Rudolph.mp3']
   }),
   new Present({
-    x: '15%', y: '68%',
+    x: '0%', y: '75%',
     folder: 'Charlie',
+    hasLid: true,
     autoTransition: true,
     style: 'charlie-stripes',
-    width: '5rem', height: '5rem',
+    width: '7rem', height: '5rem',
     hasRibbon: true,
     colorVariant: 'brown',
     ribbonStyle: 'classic'
   }),
   new Present({
-    x: '25%', y: '72%',
+    x: '55%', y: '65%',
     folder: 'Film',
     style: 'film-reel-clean',
-    width: '7rem', height: '4.5rem',
+    width: '10rem', height: '6.5rem',
     locked: false,
     hasLid: true,
     hasRibbon: false,
@@ -188,17 +189,18 @@ const presents = [
     triggerPhotos: ['978E893A-17DE-40CB-8424-BEDDAC97DA70']
   }),
   new Present({
-    x: '40%', y: '50%',
+    x: '40%', y: '73%',
     folder: 'Games',
     style: 'games-pixels',
-    width: '4.5rem', height: '6rem',
+    width: '3.5rem', height: '3.5rem',
     hasRibbon: true,
+    hasLid: false,
     colorVariant: 'red-white',
     ribbonStyle: 'classic',
     locked: true
   }),
   new Present({
-    x: '50%', y: '80%',
+    x: '15%', y: '80%',
     folder: 'Gremlin',
     autoTransition: true,
     style: 'gremlin-splatter',  // Keep your previous berry ombre style
@@ -209,11 +211,11 @@ const presents = [
     ribbonStyle: 'classic'
   }),
   new Present({
-    x: '65%', y: '77%',
+    x: '5%', y: '45%',
     folder: 'Grinch',
     autoTransition: true,
     style: 'grinch-fur', // Assuming you like the fur style from before
-    width: '6rem', height: '6.5rem',
+    width: '3rem', height: '10.5rem',
     hasLid: true,
     colorVariant: 'olive',
     hasRibbon: true,
@@ -221,11 +223,11 @@ const presents = [
     triggerSongs: ['Mr Grinch']
   }),
   new Present({
-    x: '80%', y: '55%',
+    x: '27%', y: '63%',
     folder: 'Muppets',
     autoTransition: true,
     style: 'muppets-confetti',
-    width: '4.8rem', height: '5.2rem',
+    width: '8.5rem', height: '9rem',
     hasRibbon: true,
     colorVariant: 'multi',
     ribbonStyle: 'classic',

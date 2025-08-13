@@ -185,12 +185,29 @@ body {
 }
 
 /* Style for the message text */
-#card-inside > h1 {
-  margin: 0 0 1rem 0;
-  font-size: 2rem;
+#card-inside > h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
   text-align: center;
   user-select: none;
 }
+
+#card-inside > p {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  text-align: center;
+  user-select: none;
+}
+
+#card-inside > .signature {
+  font-family: 'Pacifico', 'Brush Script MT', cursive;
+  font-size: 1.2rem;
+  position: absolute;
+  bottom: 1rem;   /* distance from the bottom edge */
+  right: 1rem;    /* distance from the right edge */
+  user-select: none;
+}
+
 
 /* Presents container fills most of the card */
 #presents-container {
