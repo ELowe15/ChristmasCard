@@ -1,3 +1,10 @@
+// --- Base folder for sound effects ---
+const EFFECTS_FOLDER = 'Audio/Effects/';
+
+// --- Sound file constants ---
+const SOUND_LID_OPEN = null; // no lid sound for now
+const SOUND_PAPER_TEAR = `${EFFECTS_FOLDER}paper-torn.mp3`;
+
 class Present {
   static totalUnlocked = 0;
   static presents = [];
@@ -89,13 +96,18 @@ class Present {
       const lid = document.createElement('div');
       lid.classList.add('lid');
       el.appendChild(lid);
-    }
 
-    if (this.hasRibbon) {
+      if (this.hasRibbon) {
+        const ribbon = document.createElement('div');
+        ribbon.classList.add('ribbon');
+        ribbon.classList.add('ribbon-on-lid'); // ribbon moves with lid
+        ribbon.classList.add(this.ribbonStyle);
+        lid.appendChild(ribbon); // <-- append INSIDE lid
+      }
+    } else if (this.hasRibbon) {
+      // ribbon on box
       const ribbon = document.createElement('div');
-      ribbon.classList.add('ribbon');
-      ribbon.classList.add(this.hasLid ? 'ribbon-on-lid' : 'ribbon-on-box');
-      ribbon.classList.add(this.ribbonStyle);
+      ribbon.classList.add('ribbon', 'ribbon-on-box', this.ribbonStyle);
       el.appendChild(ribbon);
     }
 
@@ -113,23 +125,32 @@ class Present {
           this.element.dataset.locked = false;
         }
       }
+      // Play the correct sound if it exists
+      const soundFile = this.hasLid ? SOUND_LID_OPEN : SOUND_PAPER_TEAR;
+      if (soundFile) new Audio(soundFile).play();
 
-      // Open the present
-      if (typeof Gallery !== 'undefined' && Gallery.open) {
-        Gallery.open(this.folder, this.triggerSongs, this.triggerPhotos, this.autoTransition );
-      }
-
-      // Remove from DOM after open
-      this.element.remove();
-
-      // Remove this instance from the list
-      Present.presents = Present.presents.filter(p => p !== this);
-
-      // Decrease unlocked counter if it was unlocked
-      if (!this.locked) {
-        Present.totalUnlocked--;
-      }
+      if (this.hasLid) {
+        // Trigger lid animation
+        this.element.classList.add('opened');
+      } 
+      // Wait for CSS animation to finish before removing
+      setTimeout(() => {
+        this.finishOpening();
+      }, 1000);
     });
+  }
+
+  finishOpening() {
+    if (typeof Gallery !== 'undefined' && Gallery.open) {
+      Gallery.open(this.folder, this.triggerSongs, this.triggerPhotos, this.autoTransition);
+    }
+
+    this.element.remove();
+    Present.presents = Present.presents.filter(p => p !== this);
+
+    if (!this.locked) {
+      Present.totalUnlocked--;
+    }
   }
 
   render(container) {
@@ -174,10 +195,10 @@ const presents = [
     ribbonStyle: 'classic'
   }),
   new Present({
-    x: '55%', y: '65%',
+    x: '60%', y: '65%',
     folder: 'Film',
     style: 'film-reel-clean',
-    width: '7rem', height: '5rem',
+    width: '7.5rem', height: '5.5rem',
     locked: false,
     hasLid: true,
     hasRibbon: false,
@@ -186,17 +207,17 @@ const presents = [
     triggerPhotos: ['978E893A-17DE-40CB-8424-BEDDAC97DA70']
   }),
   new Present({
-    x: '40%', y: '73%',
+    x: '40%', y: '78%',
     folder: 'Games',
     style: 'games-pixels',
-    width: '3.5rem', height: '3.5rem',
+    width: '2.5rem', height: '3.5rem',
     hasRibbon: true,
     hasLid: false,
     ribbonStyle: 'classic',
     locked: true
   }),
   new Present({
-    x: '15%', y: '80%',
+    x: '65%', y: '70%',
     folder: 'Gremlin',
     autoTransition: true,
     style: 'gremlin-splatter',  // Keep your previous berry ombre style
@@ -211,13 +232,13 @@ const presents = [
     autoTransition: true,
     style: 'grinch-fur', // Assuming you like the fur style from before
     width: '3rem', height: '10.5rem',
-    hasLid: true,
+    hasLid: false,
     hasRibbon: true,
     ribbonStyle: 'classic',
     triggerSongs: ['Mr Grinch']
   }),
   new Present({
-    x: '60%', y: '50%',
+    x: '27%', y: '60%',
     folder: 'Muppets',
     autoTransition: true,
     style: 'muppets-confetti',
