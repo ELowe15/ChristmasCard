@@ -1,5 +1,5 @@
 class AudioPlayer {
-  constructor(audioSelector, nextBtnSelector, dropdownSelector, playlistUrl, basePath, fixedEndSongs = []) {
+  constructor(audioSelector, nextBtnSelector, dropdownSelector, playlistUrl, basePath, hiddenSongs = []) {
     if (AudioPlayer._instance) {
       return AudioPlayer._instance;
     }
@@ -12,7 +12,7 @@ class AudioPlayer {
     this.playlist = [];
     this.songMap = {};
     this.currentIndex = 0;
-    this.fixedEndSongs = fixedEndSongs.map(name => name.toLowerCase()); // normalize fixed songs to lowercase
+    this.hiddenSongs = hiddenSongs.map(name => name.replace(/\.mp3$/i, "")); // normalize hidden songs
 
     this.init();
 
@@ -25,7 +25,7 @@ class AudioPlayer {
       if (!response.ok) throw new Error("Failed to load playlist");
       this.playlist = await response.json();
 
-      this.applyShuffleWithFixedEnd();
+      this.applyShuffleExcludingHidden();
 
       this.buildSongMap();
       this.populateDropdown();
@@ -35,45 +35,38 @@ class AudioPlayer {
     }
   }
 
-  // Shuffle playlist but keep fixedEndSongs at the end in given order
-  applyShuffleWithFixedEnd() {
-    // Separate fixed end songs from others
-    const lowerPlaylist = this.playlist.map(s => s.toLowerCase());
-    const fixedSongs = [];
-    const others = [];
+  // Shuffle playlist while excluding hidden songs completely
+  applyShuffleExcludingHidden() {
+    // Only keep non-hidden songs
+    this.playlist = this.playlist.filter(
+      song => !this.hiddenSongs.includes(song.replace(/\.mp3$/i, ""))
+    );
 
-    this.playlist.forEach(song => {
-      if (this.fixedEndSongs.includes(song.toLowerCase())) {
-        fixedSongs.push(song);
-      } else {
-        others.push(song);
-      }
-    });
-
-    // Shuffle others (Fisher-Yates)
-    for (let i = others.length - 1; i > 0; i--) {
+    // Shuffle playlist (Fisher-Yates)
+    for (let i = this.playlist.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [others[i], others[j]] = [others[j], others[i]];
+      [this.playlist[i], this.playlist[j]] = [this.playlist[j], this.playlist[i]];
     }
-
-    this.playlist = [...others, ...fixedSongs];
   }
 
   buildSongMap() {
     this.songMap = {};
     this.playlist.forEach((filename, index) => {
-      const name = filename.replace(/\.mp3$/i, "").toLowerCase();
+      const name = filename.replace(/\.mp3$/i, "");
       this.songMap[name] = index;
     });
   }
 
-  populateDropdown() {
-    this.dropdown.innerHTML = ""; // Clear if any
+  populateDropdown(maxChars = 20) {
+    this.dropdown.innerHTML = "";
 
     this.playlist.forEach((filename, index) => {
+      const name = filename.replace(/\.mp3$/i, "");
+      const displayName = name.length > maxChars ? name.slice(0, maxChars) + "…" : name;
+
       const option = document.createElement("option");
       option.value = index;
-      option.textContent = filename.replace(/\.mp3$/i, "");
+      option.textContent = displayName;
       this.dropdown.appendChild(option);
     });
   }
@@ -107,13 +100,43 @@ class AudioPlayer {
     });
   }
 
-  playSongByName(name) {
-    const key = name.replace(/\.mp3$/i, "").toLowerCase();
+  playSongByName(name, addToDropdown = true) {
+    const key = name.replace(/\.mp3$/i, "");
+
+    // Already in songMap
     if (key in this.songMap) {
       this.currentIndex = this.songMap[key];
       this.playSong(this.currentIndex);
+      return;
+    }
+
+    // Check hidden songs
+    const hiddenIndex = this.hiddenSongs.findIndex(f => f === key);
+    if (hiddenIndex !== -1) {
+      const filename = this.hiddenSongs[hiddenIndex]  + ".mp3";
+
+      // Add to playlist
+      this.playlist.push(filename);
+      this.currentIndex = this.playlist.length - 1;
+
+      // Add to songMap
+      this.songMap[key] = this.currentIndex;
+
+      // Optionally add to dropdown
+      if (addToDropdown) {
+        const option = document.createElement("option");
+        option.value = this.currentIndex;
+        option.textContent = filename.replace(/\.mp3$/i, "");
+        this.dropdown.appendChild(option);
+
+        // Scroll dropdown to newly added song
+        option.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        this.dropdown.value = this.currentIndex;
+      }
+
+      this.playSong(this.currentIndex);
     } else {
-      console.warn(`Song "${name}" not found in playlist.`);
+      console.warn(`Song "${name}" not found.`);
     }
   }
 
@@ -138,7 +161,6 @@ class AudioPlayer {
     }
   }
 
-  // Optional: static method to get the single instance
   static getInstance(...args) {
     if (!AudioPlayer._instance) {
       AudioPlayer._instance = new AudioPlayer(...args);

@@ -1,7 +1,7 @@
 # .gitignore
 
 # Ignore all contents of audio/ and photos/
-Audio/*
+Audio/Music*
 Photos/*
 
 # But don't ignore the folders themselves

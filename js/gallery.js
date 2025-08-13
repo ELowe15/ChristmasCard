@@ -19,8 +19,7 @@ class Gallery {
 
   static allPresentsOpened = false;
 
-  static triggerSongs = [];
-  static triggerPhotos = [];
+  static triggerItems = [];
   static imageIndexMap;
 
   static setButtonsVisibility(state) {
@@ -32,23 +31,25 @@ class Gallery {
     });
   }
 
-  static async open(folder, triggerSongs = [], triggerPhotos = [], autoTransition = false, preloadAllImages = false, wrapAround) {
+  static async open(folder, triggerItems = [], autoTransition = false, preloadAllImages = false, wrapAround) {
     this.currentFolder = `${this.baseEncryptedFolder}/${folder}`;
     this.currentIndex = 0;
     this.autoTransition = autoTransition;
     this.preloadAllImages = preloadAllImages;
     this.wrapAround = wrapAround;
-    this.triggerSongs = triggerSongs;
-    this.triggerPhotos = triggerPhotos;
+    this.triggerItems = triggerItems;
 
     if (this.allPresentsOpened){
       this.wrapAround = true;
       this.autoTransition = false;
     }
 
-    // If no trigger photos provided → play first trigger song immediately
-    if (triggerPhotos.length === 0 && triggerSongs.length > 0) {
-        AudioPlayer.getInstance().playSongByName(triggerSongs[0]); 
+    // Play first trigger song that does not have a photo
+    if (triggerItems.length > 0) {
+      const songWithoutPhoto = triggerItems.find(item => item.song && !item.photo);
+      if (songWithoutPhoto) {
+        AudioPlayer.getInstance().playSongByName(songWithoutPhoto.song);
+      }
     }
 
     // Hide card
@@ -170,24 +171,22 @@ class Gallery {
       else this.close(); // stop at last image
     }
     this.currentIndex = index;
-console.log(`Showing image index: ${index}`);
+    console.log(`Showing image index: ${index}`);
 
-  if (this.imageIndexMap && this.triggerPhotos && this.triggerSongs) {
-   const currentFileName = this.stripAllExtensions(this.imagePaths[this.currentIndex]);
-    console.log(`Current image file name: ${currentFileName}`);
+    const currentFileName = this.stripAllExtensions(this.imagePaths[index]);
 
-    for (let i = 0; i < this.triggerPhotos.length; i++) {
-      const triggerPhotoName = this.stripAllExtensions(this.triggerPhotos[i]);
-      const mappedIndex = this.imageIndexMap[triggerPhotoName];
-      console.log(`Trigger photo [${i}]: '${triggerPhotoName}', mappedIndex: ${mappedIndex}`);
-
-      if (mappedIndex === this.currentIndex && this.triggerSongs[i]) {
-        console.log(`Playing trigger song '${this.triggerSongs[i]}' for image '${currentFileName}'`);
-        AudioPlayer.getInstance().playSongByName(this.triggerSongs[i]);
-        break;
+    // Check for matching trigger items
+    if (this.triggerItems && this.imageIndexMap) {
+      for (const item of this.triggerItems) {
+        if (!item.photo) continue; // skip if no photo
+        const triggerPhotoName = this.stripAllExtensions(item.photo);
+        const mappedIndex = this.imageIndexMap[triggerPhotoName];
+        if (mappedIndex === index && item.song) {
+          AudioPlayer.getInstance().playSongByName(item.song);
+          break; // only play the first matching song
+        }
       }
     }
-  }
 
     if (this.autoTransitionTimeoutId) {
       clearTimeout(this.autoTransitionTimeoutId);

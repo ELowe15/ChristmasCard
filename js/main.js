@@ -18,7 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "#song-select",
     "Audio/Music/songs.json",
     "Audio/Music",
-    ["Mele Kalikimaka.mp3", "Mr Grinch.mp3", "Rudolph.mp3", "Scrooge.mp3"]  // these songs will always be last
+    ["Mele Kalikimaka.mp3", "Mr Grinch.mp3", "Rudolph.mp3", 
+      "It Feels Like Christmas.mp3", "Alvin and the Chipmunks.mp3"]  // these songs will always be last
   );
 
   // Hide main card initially
