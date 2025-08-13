@@ -185,7 +185,7 @@ function createPresents() {
                     {photo:'1C24FE35-F070-4D32-BE9B-A2D250ABFDB7', song:'Alvin and the Chipmunks.mp3'}
                   ] }),
                   
-    new Present({ x:'40%', y:'77%', width:'2.5rem', height:'3.5rem',
+    new Present({ x:'40%', y:'75%', width:'2.5rem', height:'3.5rem',
                   folder:'Games', style:'games-pixels', hasLid:false, hasRibbon:true, ribbonStyle:'classic', locked:true,
                   triggerItems:[] }),
                   
@@ -197,7 +197,7 @@ function createPresents() {
                   folder:'Grinch', style:'grinch-fur', hasLid:false, hasRibbon:true, ribbonStyle:'classic', autoTransition:true,
                   triggerItems:[{song:'Mr Grinch'}] }),
                   
-    new Present({ x:'27%', y:'56%', width:'8.5rem', height:'9rem',
+    new Present({ x:'27%', y:'54%', width:'8.5rem', height:'9rem',
                   folder:'Muppets', style:'muppets-confetti', hasLid:false, hasRibbon:true, ribbonStyle:'classic', autoTransition:true,
                   triggerItems:[{song:'It Feels Like Christmas.mp3'}] })
   ];
