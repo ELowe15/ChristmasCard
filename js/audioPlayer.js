@@ -57,7 +57,7 @@ class AudioPlayer {
     });
   }
 
-  populateDropdown(maxChars = 25) {
+  populateDropdown(maxChars = 17) {
     this.dropdown.innerHTML = "";
 
     this.playlist.forEach((filename, index) => {
