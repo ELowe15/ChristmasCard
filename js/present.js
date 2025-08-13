@@ -235,23 +235,20 @@ const presents = [
   }),
 ];
 
+  // First, render them in any order so they exist in the DOM
+  presents.forEach(p => p.render(presentsContainer));
 
-// Dynamically get actual rem size
-  const remInPx = parseFloat(getComputedStyle(document.documentElement).fontSize);
-  const containerHeight = window.innerHeight;
-
-  // Sort by visual bottom position
+  // Now actually measure their visual bottom position
   presents.sort((a, b) => {
-    const aY = parseFloat(a.y) / 100 * containerHeight;
-    const bY = parseFloat(b.y) / 100 * containerHeight;
-    const aHeight = parseFloat(a.height) * remInPx;
-    const bHeight = parseFloat(b.height) * remInPx;
+    const aRect = a.element.getBoundingClientRect();
+    const bRect = b.element.getBoundingClientRect();
 
-    const aBottom = aY + aHeight;
-    const bBottom = bY + bHeight;
+    const aBottom = aRect.bottom; // absolute bottom position in viewport
+    const bBottom = bRect.bottom;
 
-    return aBottom - bBottom;
+    return aBottom - bBottom; // lower bottoms come first, higher last
   });
 
-  presents.forEach(p => p.render(presentsContainer));
+  presentsContainer.querySelectorAll('.present').forEach(el => el.remove());
+  presents.forEach(p => presentsContainer.appendChild(p.element));
 }

@@ -184,19 +184,20 @@ body {
   overflow: hidden; /* prevent scrollbars */
 }
 
-/* Style for the message text */
-#card-inside > h2 {
+#card-inside > h2,
+#card-inside > p {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* clean & readable */
   margin: 0 0 0.5rem 0;
-  font-size: 1.5rem;
   text-align: center;
   user-select: none;
 }
 
+#card-inside > h2 {
+  font-size: 1.5rem;
+}
+
 #card-inside > p {
-  margin: 0 0 0.5rem 0;
   font-size: 1rem;
-  text-align: center;
-  user-select: none;
 }
 
 #card-inside > .signature {
