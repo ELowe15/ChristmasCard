@@ -23,7 +23,7 @@
   border: none;
   color: var(--color-btn-text);
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   padding: 0.25em 0.6em;
   border-radius: 4px;
   cursor: pointer;
@@ -45,6 +45,10 @@
   color: var(--color-btn-text);
   cursor: pointer;
   transition: background-color 0.3s ease;
+  max-width: 50vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #song-select:hover {

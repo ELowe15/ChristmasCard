@@ -197,7 +197,7 @@ function createPresents() {
                   folder:'Grinch', style:'grinch-fur', hasLid:false, hasRibbon:true, ribbonStyle:'classic', autoTransition:true,
                   triggerItems:[{song:'Mr Grinch'}] }),
                   
-    new Present({ x:'27%', y:'54%', width:'8.5rem', height:'9rem',
+    new Present({ x:'27%', y:'53%', width:'8.5rem', height:'9rem',
                   folder:'Muppets', style:'muppets-confetti', hasLid:false, hasRibbon:true, ribbonStyle:'classic', autoTransition:true,
                   triggerItems:[{song:'It Feels Like Christmas.mp3'}] })
   ];
