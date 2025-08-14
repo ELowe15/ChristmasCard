@@ -36,10 +36,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     cardWrapper.style.display = "flex";
 
-    document.getElementById("audio-controls-container").style.display = "block";
+    const fireAudio = document.getElementById("fire-crackle");
+    fireAudio.currentTime = 0;
+    fireAudio.play().catch(err => {
+      console.warn("Autoplay blocked:", err);
+    });
+
     document.getElementById("snowSliderContainer").style.display = "block";
     document.getElementById("snowSlider").value = getSliderValueFromInterval(getSnowInterval());
-    AudioPlayer.getInstance().playSong(0);
     startSnowTimers();
     createPresents();
     correct = true;
@@ -96,6 +100,7 @@ function handleStart(e) {
   startX = e.touches ? e.touches[0].clientX : e.clientX;
 }
 
+
 function handleMove(e) {
 
   if (!cardSwipeEnabled) return;
@@ -105,18 +110,30 @@ function handleMove(e) {
     if (!correct){
     return;
   }
+  const fireAudio = document.getElementById("fire-crackle");
+
   if (!cardOpen && diffX < -50) {
     card.classList.add("open");
     cardOpen = true;
+    fireAudio.pause();
 
     if (!cardOpened) {
       cardOpened = true;
+      document.getElementById("audio-controls-container").style.display = "block";
+      document.getElementById("snowSliderContainer").style.display = "block";
+      document.getElementById("snowSlider").value = getSliderValueFromInterval(getSnowInterval());
+      AudioPlayer.getInstance().playSong(0);
+      fireAudio.pause();
       updateSnowInterval(1);
       document.getElementById("snowSlider").value = getSliderValueFromInterval(getSnowInterval());
     }
   } else if (cardOpen && diffX > 50) {
     card.classList.remove("open");
     cardOpen = false;
+
+    fireAudio.play().catch(err => {
+        console.warn("Autoplay blocked:", err);
+      });
   }
 }
 
