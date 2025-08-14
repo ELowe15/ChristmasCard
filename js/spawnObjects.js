@@ -36,7 +36,7 @@ function getSliderValueFromInterval(interval) {
 function getIntervalFromSliderValue(value) {
   if (value === 0) return Infinity;
 
-  const minInterval = 200;    // fastest
+  const minInterval = 100;    // fastest
   const maxInterval = 10000;  // slowest
   const minLog = Math.log(minInterval);
   const maxLog = Math.log(maxInterval);
@@ -57,7 +57,7 @@ function spawnFallingEmoji(
     minFontSize = 10,
     maxFontSize = 30,
     minFallSpeed = 0.5,
-    maxFallSpeed = 2.0,
+    maxFallSpeed = 1.5,
     minSway = -1,
     maxSway = 1,
     opacity = 0.85,
