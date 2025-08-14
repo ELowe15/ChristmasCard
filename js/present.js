@@ -156,9 +156,11 @@ class Present {
   }
 
   static checkAllOpened() {
-    if (Present.presents.length === 0) {
+    if (Present.presents.length != 0) {
       Present.showMessage("You've opened all the presents! Now go open your real ones... or keep open these again.");
-      updateSnowInterval(0.1);
+      for (let i = 0; i < 40; i++){
+        spawnSnow();
+      }
       createPresents();
       return true;
     }

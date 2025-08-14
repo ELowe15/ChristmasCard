@@ -55,11 +55,11 @@ function spawnFallingEmoji(
   emojiArray,
   {
     minFontSize = 10,
-    maxFontSize = 40,
+    maxFontSize = 35,
     minFallSpeed = 0.5,
     maxFallSpeed = 1.5,
-    minSway = -1,
-    maxSway = 1,
+    minSway = -4,
+    maxSway = 4,
     opacity = 0.85,
     zIndex = 5
   } = {}
