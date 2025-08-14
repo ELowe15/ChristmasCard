@@ -6,6 +6,7 @@ class Gallery {
   static currentIndex = 0;
   static autoTransition = false;
   static autoTransitionTimeoutId = null;
+  static justOpened = true;
   // Configurable timing
   static fadeDuration = 2000; // ms, fade in/out speed
   static autoTransitionDelay = 2000; // ms, delay before auto transition to next image
@@ -38,9 +39,12 @@ class Gallery {
     this.preloadAllImages = preloadAllImages;
     this.wrapAround = wrapAround;
     this.triggerItems = triggerItems;
+    this.justOpened = true;
+    this.wrapAround = true;
 
     if (this.allPresentsOpened){
       this.wrapAround = true;
+      this.justOpened = false;
       this.autoTransition = false;
     }
 
@@ -163,10 +167,11 @@ class Gallery {
   static async showImage(index) {
     // Handle wrapAround flag:
     if (index < 0) {
-      if (this.wrapAround) index = this.currentImages.length - 1;
-      else this.close(); // stop at first image
+      if (this.wrapAround && !this.justOpened) index = this.currentImages.length - 1;
+      else return; // stop at first image
     }
     if (index >= this.currentImages.length) {
+      this.justOpened = false;
       if (this.wrapAround) index = 0;
       else this.close(); // stop at last image
     }
