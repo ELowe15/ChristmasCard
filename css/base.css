@@ -143,8 +143,6 @@ body {
   max-width: 500px;         /* Optional: prevent it from getting too huge on wide screens */
   display: block;           /* Ensure it's treated like a block element */
   border-radius: 16px;      /* Smooth, rounded corners */
-  overflow: hidden; /* ensures the border-radius clips video edges */
-  border: 2px solid var(--color-gold-border);
 }
 
 #card-front p {

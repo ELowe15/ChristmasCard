@@ -1,4 +1,4 @@
-let snowInterval = 400; // default 0.4s in ms
+let snowInterval = 300; // default 0.4s in ms
 let timerA;
 const snowflakes = [];
 const maxSnowflakes = 100; // cap for performance
@@ -55,7 +55,7 @@ function spawnFallingEmoji(
   emojiArray,
   {
     minFontSize = 10,
-    maxFontSize = 30,
+    maxFontSize = 40,
     minFallSpeed = 0.5,
     maxFallSpeed = 1.5,
     minSway = -1,

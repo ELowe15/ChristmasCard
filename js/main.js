@@ -111,7 +111,7 @@ function handleMove(e) {
 
     if (!cardOpened) {
       cardOpened = true;
-      updateSnowInterval(1.8);
+      updateSnowInterval(1);
       document.getElementById("snowSlider").value = getSliderValueFromInterval(getSnowInterval());
     }
   } else if (cardOpen && diffX > 50) {

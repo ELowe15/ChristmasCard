@@ -51,7 +51,7 @@
   color: var(--color-btn-text);
   cursor: pointer;
   transition: background-color 0.3s ease;
-  transform: translateY(0.03rem);
+  transform: translateY(0.04rem);
 }
 
 #song-select:hover {

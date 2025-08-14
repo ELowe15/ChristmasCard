@@ -157,7 +157,8 @@ class Present {
 
   static checkAllOpened() {
     if (Present.presents.length === 0) {
-      Present.showMessage("Congratulations! You've opened all the presents!");
+      Present.showMessage("You've opened all the presents! Now go open your real ones... or keep open these again.");
+      updateSnowInterval(0.1);
       createPresents();
       return true;
     }
