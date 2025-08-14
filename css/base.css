@@ -205,7 +205,7 @@ body {
   font-family: 'Pacifico', 'Brush Script MT', cursive;
   font-size: 1.2rem;
   position: absolute;
-  bottom: 60%;   /* distance from the bottom edge */
+  bottom: 65%;   /* distance from the bottom edge */
   right: 2.5rem;    /* distance from the right edge */
   user-select: none;
 }
