@@ -204,11 +204,19 @@ body {
   font-family: 'Pacifico', 'Brush Script MT', cursive;
   font-size: 1.2rem;
   position: absolute;
-  bottom: 1rem;   /* distance from the bottom edge */
-  right: 1rem;    /* distance from the right edge */
+  bottom: 70%;   /* distance from the bottom edge */
+  right: 3rem;    /* distance from the right edge */
   user-select: none;
 }
 
+.signature .line1,
+.signature .line2 {
+  display: block;
+}
+
+.signature .line2 {
+  margin-left: 1.5em;       /* signature-style indent */
+}
 
 /* Presents container fills most of the card */
 #presents-container {

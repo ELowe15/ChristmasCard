@@ -1,7 +1,7 @@
-const CHARLIMIT = 17;
+const CHARLIMIT = 18;
 
 class AudioPlayer {
-  constructor(audioSelector, nextBtnSelector, dropdownSelector, playlistUrl, basePath, hiddenSongs = []) {
+  constructor(audioSelector, nextBtnSelector, dropdownSelector, playlistUrl, basePath, hiddenSongs = [], firstSongs = null) {
     if (AudioPlayer._instance) {
       return AudioPlayer._instance;
     }
@@ -15,6 +15,7 @@ class AudioPlayer {
     this.songMap = {};
     this.currentIndex = 0;
     this.hiddenSongs = hiddenSongs.map(name => name.replace(/\.mp3$/i, "")); // normalize hidden songs
+    this.firstSongs = (firstSongs || []).map(name => name.replace(/\.mp3$/i, "")); // normalize first songs
 
     this.init();
 
@@ -39,16 +40,38 @@ class AudioPlayer {
 
   // Shuffle playlist while excluding hidden songs completely
   applyShuffleExcludingHidden() {
-    // Only keep non-hidden songs
+    // Exclude hidden songs
     this.playlist = this.playlist.filter(
       song => !this.hiddenSongs.includes(song.replace(/\.mp3$/i, ""))
     );
 
-    // Shuffle playlist (Fisher-Yates)
+    // Separate first songs (if any) from the rest
+    let firstSongsToPlay = [];
+    if (this.firstSongs && this.firstSongs.length > 0) {
+      this.playlist = this.playlist.filter(song => {
+        const normalized = song.replace(/\.mp3$/i, "");
+        if (this.firstSongs.includes(normalized)) {
+          firstSongsToPlay.push(song);
+          return false; // remove from main playlist
+        }
+        return true;
+      });
+
+      // Shuffle first songs among themselves
+      for (let i = firstSongsToPlay.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [firstSongsToPlay[i], firstSongsToPlay[j]] = [firstSongsToPlay[j], firstSongsToPlay[i]];
+      }
+    }
+
+    // Shuffle the remaining playlist
     for (let i = this.playlist.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [this.playlist[i], this.playlist[j]] = [this.playlist[j], this.playlist[i]];
     }
+
+    // Prepend first songs (if any)
+    this.playlist = [...firstSongsToPlay, ...this.playlist];
   }
 
   buildSongMap() {
@@ -97,9 +120,7 @@ class AudioPlayer {
     const filename = this.playlist[index];
     this.audio.src = `${this.basePath}/${filename}`;
     this.dropdown.value = index;
-    this.audio.play().catch(err => {
-      console.error("Playback failed:", err);
-    });
+    this.audio.play().catch(err => console.error("Playback failed:", err));
   }
 
   playSongByName(name, addToDropdown = true) {

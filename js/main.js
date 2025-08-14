@@ -19,8 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
     "Audio/Music/songs.json",
     "Audio/Music",
     ["Mele Kalikimaka.mp3", "Mr Grinch.mp3", "Rudolph.mp3", 
-      "It Feels Like Christmas.mp3", "Alvin and the Chipmunks.mp3"]  // these songs will always be last
-  );
+      "It Feels Like Christmas.mp3", "Alvin and the Chipmunks.mp3"],  // these songs will always be last
+    ["LIGHTS ON.mp3", "Snowman.mp3"]
+    );
 
   // Hide main card initially
   cardWrapper.style.display = "none";
