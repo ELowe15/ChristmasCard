@@ -190,7 +190,7 @@ function createPresents() {
                   triggerItems:[] }),
                   
     new Present({ x:'0%', y:'72%', width:'6rem', height:'5rem',
-                  folder:'Gremlin', style:'gremlin-splatter', hasLid:true, hasRibbon:false, ribbonStyle:'classic', autoTransition:true,
+                  folder:'Gremlin', style:'gremlin-splatter', hasLid:true, hasRibbon:true, ribbonStyle:'classic', autoTransition:true,
                   triggerItems:[] }),
                   
     new Present({ x:'5%', y:'45%', width:'3rem', height:'10.5rem',

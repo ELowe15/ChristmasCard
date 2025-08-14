@@ -23,9 +23,9 @@
   border: none;
   color: var(--color-btn-text);
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   padding: 0.25em 0.6em;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
   border: 1px solid var(--color-audio-border);
   transition: background-color 0.3s ease;
@@ -40,7 +40,7 @@
   font-size: 0.9rem;
   padding: 0.25em 0.4em;
   border: 1px solid var(--color-audio-border);
-  border-radius: 4px;
+  border-radius: 5px;
   background-color: var(--color-audio-btn-bg); /* match button */
   color: var(--color-btn-text);
   cursor: pointer;
