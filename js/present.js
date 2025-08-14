@@ -175,7 +175,7 @@ function createPresents() {
                   folder:'Bass', style:'candy-cane-stripes', hasLid:true, hasRibbon:true, ribbonStyle:'classic', autoTransition:true,
                   triggerItems:[{song:'Rudolph.mp3'}] }),
                   
-    new Present({ x:'0%', y:'75%', width:'6rem', height:'4rem',
+    new Present({ x:'65%', y:'75%', width:'6rem', height:'4rem',
                   folder:'Charlie', style:'charlie-stripes', hasLid:true, hasRibbon:true, ribbonStyle:'classic', autoTransition:true,
                   triggerItems:[] }),
                   
@@ -189,8 +189,8 @@ function createPresents() {
                   folder:'Games', style:'games-pixels', hasLid:false, hasRibbon:true, ribbonStyle:'classic', locked:true,
                   triggerItems:[] }),
                   
-    new Present({ x:'65%', y:'70%', width:'6rem', height:'5rem',
-                  folder:'Gremlin', style:'gremlin-splatter', hasLid:true, hasRibbon:true, ribbonStyle:'classic', autoTransition:true,
+    new Present({ x:'0%', y:'70%', width:'6rem', height:'5rem',
+                  folder:'Gremlin', style:'gremlin-splatter', hasLid:true, hasRibbon:false, ribbonStyle:'classic', autoTransition:true,
                   triggerItems:[] }),
                   
     new Present({ x:'5%', y:'45%', width:'3rem', height:'10.5rem',
