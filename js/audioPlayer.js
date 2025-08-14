@@ -1,3 +1,5 @@
+const CHARLIMIT = 17;
+
 class AudioPlayer {
   constructor(audioSelector, nextBtnSelector, dropdownSelector, playlistUrl, basePath, hiddenSongs = []) {
     if (AudioPlayer._instance) {
@@ -57,12 +59,12 @@ class AudioPlayer {
     });
   }
 
-  populateDropdown(maxChars = 17) {
+  populateDropdown() {
     this.dropdown.innerHTML = "";
 
     this.playlist.forEach((filename, index) => {
       const name = filename.replace(/\.mp3$/i, "");
-      const displayName = name.length > maxChars ? name.slice(0, maxChars) + "…" : name;
+      const displayName = name.length > CHARLIMIT ? name.slice(0, CHARLIMIT) + "…" : name;
 
       const option = document.createElement("option");
       option.value = index;
@@ -126,10 +128,13 @@ class AudioPlayer {
       if (addToDropdown) {
         const option = document.createElement("option");
         option.value = this.currentIndex;
-        option.textContent = filename.replace(/\.mp3$/i, "");
+
+        const name = filename.replace(/\.mp3$/i, "");
+        const displayName = name.length > CHARLIMIT ? name.slice(0, CHARLIMIT) + "…" : name;
+
+        option.textContent = displayName;
         this.dropdown.appendChild(option);
 
-        // Scroll dropdown to newly added song
         option.scrollIntoView({ behavior: "smooth", block: "nearest" });
         this.dropdown.value = this.currentIndex;
       }
