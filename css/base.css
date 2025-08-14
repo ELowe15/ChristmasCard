@@ -144,6 +144,7 @@ body {
   display: block;           /* Ensure it's treated like a block element */
   border-radius: 16px;      /* Smooth, rounded corners */
   box-shadow: 0 4px 12px var(--color-shadow-medium);
+  border: 2px solid var(--color-gold-border);
 }
 
 #card-front p {
@@ -204,8 +205,8 @@ body {
   font-family: 'Pacifico', 'Brush Script MT', cursive;
   font-size: 1.2rem;
   position: absolute;
-  bottom: 70%;   /* distance from the bottom edge */
-  right: 3rem;    /* distance from the right edge */
+  bottom: 60%;   /* distance from the bottom edge */
+  right: 2.5rem;    /* distance from the right edge */
   user-select: none;
 }
 

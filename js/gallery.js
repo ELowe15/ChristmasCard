@@ -40,7 +40,6 @@ class Gallery {
     this.wrapAround = wrapAround;
     this.triggerItems = triggerItems;
     this.justOpened = true;
-    this.wrapAround = true;
 
     if (this.allPresentsOpened){
       this.wrapAround = true;
@@ -177,8 +176,6 @@ class Gallery {
     }
     this.currentIndex = index;
     console.log(`Showing image index: ${index}`);
-
-    const currentFileName = this.stripAllExtensions(this.imagePaths[index]);
 
     // Check for matching trigger items
     if (this.triggerItems && this.imageIndexMap) {
