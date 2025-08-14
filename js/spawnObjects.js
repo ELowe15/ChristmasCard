@@ -1,5 +1,7 @@
-let snowInterval = 400; // default 0.5s in ms
-let timerA
+let snowInterval = 400; // default 0.4s in ms
+let timerA;
+const snowflakes = [];
+const maxSnowflakes = 100; // cap for performance
 
 function setSnowInterval(interval){
   snowInterval = interval;
@@ -13,12 +15,9 @@ function getSnowInterval(){
 function startSnowTimers() {
   clearInterval(timerA);
 
-  if (!isFinite(snowInterval)) {
-    return; // Don't spawn anything if interval is Infinity
-  }
+  if (!isFinite(snowInterval)) return; // Don't spawn anything if interval is Infinity
 
   timerA = setInterval(spawnSnow, snowInterval);
-
 }
 
 function updateSnowInterval(newSeconds) {
@@ -37,10 +36,8 @@ function getSliderValueFromInterval(interval) {
 function getIntervalFromSliderValue(value) {
   if (value === 0) return Infinity;
 
-  const minInterval = 100;    // fastest
+  const minInterval = 200;    // fastest
   const maxInterval = 10000;  // slowest
-
-  // Map slider 1–100 (we avoid 0 for log) to log scale
   const minLog = Math.log(minInterval);
   const maxLog = Math.log(maxInterval);
 
@@ -57,8 +54,8 @@ function spawnSnow() {
 function spawnFallingEmoji(
   emojiArray,
   {
-    minFontSize = 20,
-    maxFontSize = 40,
+    minFontSize = 10,
+    maxFontSize = 30,
     minFallSpeed = 0.5,
     maxFallSpeed = 2.0,
     minSway = -1,
@@ -67,33 +64,45 @@ function spawnFallingEmoji(
     zIndex = 5
   } = {}
 ) {
+  if (snowflakes.length >= maxSnowflakes) return; // cap snowflakes
+
   const emoji = document.createElement("div");
   emoji.textContent = emojiArray[Math.floor(Math.random() * emojiArray.length)];
   emoji.style.position = "fixed";
-  emoji.style.top = "-50px";
-  emoji.style.fontSize = Math.random() * (maxFontSize - minFontSize) + minFontSize + "px";
+  emoji.style.top = "0";
+  emoji.style.left = "0";
+  emoji.style.fontSize = `${Math.random() * (maxFontSize - minFontSize) + minFontSize}px`;
   emoji.style.opacity = opacity;
-  emoji.style.zIndex = zIndex.toString();
   emoji.style.pointerEvents = 'none';
+  emoji.style.zIndex = zIndex;
+  emoji.style.transform = `translate3d(${Math.random() * window.innerWidth}px, -50px, 0)`;
 
-  const startLeft = Math.random() * window.innerWidth;
-  emoji.style.left = `${startLeft}px`;
-
-  document.body.appendChild(emoji);
-
-  let y = -50;
   const fallSpeed = Math.random() * (maxFallSpeed - minFallSpeed) + minFallSpeed;
   const swayAmount = Math.random() * (maxSway - minSway) + minSway;
+  const startX = parseFloat(emoji.style.transform.split(',')[0].replace('translate3d(', ''));
 
-  const fallInterval = setInterval(() => {
-    y += fallSpeed;
-    const sway = Math.sin(y / 20) * swayAmount * 5;
-    emoji.style.top = `${y}px`;
-    emoji.style.left = `${startLeft + sway}px`;
+  snowflakes.push({ emoji, y: -50, x: startX, fallSpeed, swayAmount });
+  document.body.appendChild(emoji);
 
-    if (y > window.innerHeight + 50) {
-      clearInterval(fallInterval);
-      emoji.remove();
+  // Start the animation loop if not already running
+  if (!animateSnow.started) {
+    requestAnimationFrame(animateSnow);
+    animateSnow.started = true;
+  }
+}
+
+function animateSnow() {
+  for (let i = snowflakes.length - 1; i >= 0; i--) {
+    const flake = snowflakes[i];
+    flake.y += flake.fallSpeed;
+    const sway = Math.sin(flake.y / 20) * flake.swayAmount * 5;
+    flake.emoji.style.transform = `translate3d(${flake.x + sway}px, ${flake.y}px, 0)`;
+
+    if (flake.y > window.innerHeight + 50) {
+      flake.emoji.remove();
+      snowflakes.splice(i, 1);
     }
-  }, 16);
+  }
+
+  requestAnimationFrame(animateSnow);
 }
