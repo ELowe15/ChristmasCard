@@ -183,7 +183,7 @@ function createPresents() {
                   triggerItems:[] }),
                   
     new Present({ x:'60%', y:'63%', width:'7.5rem', height:'5.5rem',
-                  folder:'Film', style:'film-reel-clean', hasLid:true, hasRibbon:false, ribbonStyle:'classic',
+                  folder:'Film', style:'film-reel-clean', hasLid:true, hasRibbon:false, ribbonStyle:'classic', locked:true,
                   triggerItems:[{photo:'978E893A-17DE-40CB-8424-BEDDAC97DA70', song:'Mele Kalikimaka.mp3'},
                     {photo:'1C24FE35-F070-4D32-BE9B-A2D250ABFDB7', song:'Alvin and the Chipmunks.mp3'}
                   ] }),

@@ -37,8 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
     cardWrapper.style.display = "flex";
 
     startFireplace();
-    document.getElementById("snowSliderContainer").style.display = "block";
-    document.getElementById("snowSlider").value = getSliderValueFromInterval(getSnowInterval());
     startSnowTimers();
     createPresents();
     correct = true;
