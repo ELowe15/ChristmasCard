@@ -107,6 +107,9 @@ function handleMove(e) {
   if (!cardOpen && diffX < -50) {
     card.classList.add("open");
     cardOpen = true;
+    const container = document.getElementById("audio-controls-container");
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--color-card-inside-bg');
+    container.style.background = color;
     delayedStopFireplace();
 
     if (!cardOpened) {
@@ -122,7 +125,9 @@ function handleMove(e) {
   } else if (cardOpen && diffX > 50) {
     card.classList.remove("open");
     cardOpen = false;
-
+    const container = document.getElementById("audio-controls-container");
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--color-card-face-bg');
+    container.style.background = color;
     startFireplace();
   }
 }
