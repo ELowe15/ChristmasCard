@@ -8,8 +8,8 @@ class Gallery {
   static autoTransitionTimeoutId = null;
   static justOpened = true;
   // Configurable timing
-  static fadeDuration = 2000; // ms, fade in/out speed
-  static autoTransitionDelay = 2000; // ms, delay before auto transition to next image
+  static fadeDuration = 3000; // ms, fade in/out speed
+  static autoTransitionDelay = 3000; // ms, delay before auto transition to next image
 
   // Flags which loading mode to use
   static preloadAllImages = false;

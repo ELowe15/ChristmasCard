@@ -15,6 +15,7 @@
   <script defer src="js/present.js"></script>
   <script defer src="js/decryption.js"></script>
   <script defer src="js/spawnObjects.js"></script>
+  <script defer src="js/firePlace.js"></script>
   <script src="js/audioPlayer.js" defer></script>
   <script defer src="js/main.js"></script>
 </head>
@@ -38,7 +39,6 @@
   </div>
 
   <audio id="bg-music" hidden></audio>
-  <audio id="fire-crackle" src="Audio/Effects/fire-crackling.m4a" loop></audio>
 
   <!-- Snow speed slider -->
   <div id="snowSliderContainer" style="display: none;">
@@ -55,7 +55,7 @@
         </div>
 
         <video
-          class="fireplace-video" autoplay muted loop playsinline preload="auto">
+          class="fireplace-video" muted loop playsinline preload="auto">
           <source src="Fireplace.mp4" type="video/mp4" />
         </video>
 
