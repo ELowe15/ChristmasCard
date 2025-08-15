@@ -7,3 +7,7 @@ Photos/*
 # But don't ignore the folders themselves
 !Audio/
 !Photos/
+
+# Don't ignore Permanent folder inside Photos
+!Photos/PublicMedia/
+!Photos/PublicMedia/**
