@@ -57,7 +57,7 @@
 #song-select:hover {
   background-color: var(--color-audio-btn-bg-hover); /* match button hover */
   color: var(--color-btn-text);
-  border-color: var(--color-audio-border);
+  border-color: var(--color-gold-border);
 }
 
 #snowSliderContainer {
