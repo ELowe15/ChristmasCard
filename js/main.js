@@ -109,7 +109,7 @@ function handleMove(e) {
   if (!cardOpen && diffX < -50) {
     card.classList.add("open");
     cardOpen = true;
-    stopFireplace();
+    delayedStopFireplace();
 
     if (!cardOpened) {
       cardOpened = true;
@@ -117,7 +117,7 @@ function handleMove(e) {
       document.getElementById("snowSliderContainer").style.display = "block";
       document.getElementById("snowSlider").value = getSliderValueFromInterval(getSnowInterval());
       AudioPlayer.getInstance().playSong(0);
-      stopFireplace();
+      delayedStopFireplace();
       updateSnowInterval(1);
       document.getElementById("snowSlider").value = getSliderValueFromInterval(getSnowInterval());
     }

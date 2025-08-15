@@ -38,3 +38,9 @@ function stopFireplace() {
     fireplaceVideo.currentTime = 0;
   }
 }
+
+function delayedStopFireplace(delay = 500) {
+  setTimeout(() => {
+    stopFireplace();
+  }, delay);
+}
